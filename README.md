@@ -20,11 +20,21 @@
             title: "Profiles",
           ]
         ]
-      ]]
+      ]
+      fr: [
+        flash: [
+          notice: [
+            hello: "salut %{first} %{last}"
+          ]
+       ],
+    ]
   end
 
 iex> Translations.t("en", "flash.notice.hello", first: "chris", last: "mccord")
 "hello chris mccord"
+
+iex> Translations.t("fr", "flash.notice.hello", first: "chris", last: "mccord")
+"salut chris mccord"
 
 iex> Translations.t("en", "flash.users.title")
 "Users"
