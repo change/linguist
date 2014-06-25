@@ -53,6 +53,7 @@ defmodule LinguistTest do
   end
 
   test "it compiles all locales" do
+    assert I18n.t("en", "flash.notice.hello", first: "chris", last: "mccord") == "hello chris mccord"
     assert I18n.t("fr", "flash.notice.hello", first: "chris", last: "mccord") == "salut chris mccord"
   end
 end
