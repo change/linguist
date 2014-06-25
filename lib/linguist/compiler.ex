@@ -1,6 +1,5 @@
 defmodule Linguist.Compiler do
   alias Linguist.Compiler
-  alias Linguist.Translator
 
   defmacro __using__(options) do
     locales = Dict.fetch! options, :locales
