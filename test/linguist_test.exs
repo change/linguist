@@ -2,21 +2,29 @@ defmodule LinguistTest do
   use ExUnit.Case
 
   defmodule I18n do
-    use Linguist.Compiler, locales: [en: [
-      foo: "bar",
-      flash: [
-        notice: [
-          alert: "Alert!",
-          hello: "hello %{first} %{last}",
-          bye: "bye now, %{name}!"
+    use Linguist.Compiler, locales: [
+      en: [
+        foo: "bar",
+        flash: [
+          notice: [
+            alert: "Alert!",
+            hello: "hello %{first} %{last}",
+            bye: "bye now, %{name}!"
+          ]
+        ],
+        users: [
+          title: "Users",
+          profiles: [
+            title: "Profiles",
+          ]
         ]
       ],
-      users: [
-        title: "Users",
-        profiles: [
-          title: "Profiles",
-        ]
-      ]
+      fr: [
+        flash: [
+          notice: [
+            hello: "salut %{first} %{last}"
+          ]
+       ],
     ]]
   end
 
@@ -42,6 +50,10 @@ defmodule LinguistTest do
     assert_raise KeyError, fn ->
       I18n.t("en", "flash.notice.hello", first: "chris")
     end
+  end
+
+  test "it compiles all locales" do
+    assert I18n.t("fr", "flash.notice.hello", first: "chris", last: "mccord") == "salut chris mccord"
   end
 end
 
