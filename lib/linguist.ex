@@ -1,0 +1,2 @@
+defmodule Linguist do
+end
