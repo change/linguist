@@ -5,7 +5,7 @@
 ## Usage
 
 ```elixir
-  defmodule Translations do
+  defmodule I18n do
     use Linguist.Compiler, locales: [
       en: [
         flash: [
@@ -26,17 +26,17 @@
           notice: [
             hello: "salut %{first} %{last}"
           ]
-       ],
+       ]
     ]
   end
 
-iex> Translations.t("en", "flash.notice.hello", first: "chris", last: "mccord")
+iex> I18n.t("en", "flash.notice.hello", first: "chris", last: "mccord")
 "hello chris mccord"
 
-iex> Translations.t("fr", "flash.notice.hello", first: "chris", last: "mccord")
+iex> I18n.t("fr", "flash.notice.hello", first: "chris", last: "mccord")
 "salut chris mccord"
 
-iex> Translations.t("en", "flash.users.title")
+iex> I18n.t("en", "flash.users.title")
 "Users"
 ```
 
