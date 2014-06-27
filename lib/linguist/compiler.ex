@@ -4,8 +4,14 @@ defmodule Linguist.Compiler do
   defmacro __using__(options) do
     locales = Dict.fetch! options, :locales
 
-    for {locale, source} <- locales do
-      deftranslations(to_string(locale), "", source)
+    translations =
+      for {locale, source} <- locales do
+        deftranslations(to_string(locale), "", source)
+      end
+
+    quote do
+      def t(locale, path, binding \\ [])
+      unquote(translations)
     end
   end
 
@@ -17,9 +23,6 @@ defmodule Linguist.Compiler do
         deftranslations(locale, path, val)
       else
         quote do
-          def t(unquote(locale), unquote(path)) do
-            t(unquote(locale), unquote(path), [])
-          end
           def t(unquote(locale), unquote(path), bindings) do
             unquote(Compiler.interpolate(val, :bindings))
           end
