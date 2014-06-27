@@ -21,18 +21,22 @@ defmodule Linguist.Compiler do
             t(unquote(locale), unquote(path), [])
           end
           def t(unquote(locale), unquote(path), bindings) do
-            Compiler.interpolate(unquote(val), bindings)
+            unquote(Compiler.interpolate(val, :bindings))
           end
         end
       end
     end
   end
 
-  def interpolate(string, options) do
-    bindings = for {key, val} <- options, into: %{}, do: {to_string(key), val}
-
-    Regex.replace ~r/%{([^}]+)}/, string, fn _, binding ->
-      Dict.fetch!(bindings, binding)
+  def interpolate(string, var) do
+    Regex.split(~r/(%{[^}]+})/, string) |> Enum.reduce fn
+      <<"%{" <> rest>>, acc ->
+        key      = String.to_atom(String.rstrip(rest, ?}))
+        bindings = Macro.var(var, __MODULE__)
+        quote do
+          unquote(acc) <> Dict.fetch!(unquote(bindings), unquote(key))
+        end
+      segment, acc -> quote do: (unquote(acc) <> unquote(segment))
     end
   end
 
