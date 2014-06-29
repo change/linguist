@@ -1,6 +1,45 @@
 defmodule Linguist.Compiler do
   alias Linguist.Compiler
 
+  @moduledoc """
+  This module compiles the given translations in a method `t` of the form `t(locale, path, bindings)`.
+
+  For example, given the following translations :
+
+  ```elixir
+  [
+    en: [
+      flash: [
+        notice: [
+          hello: "hello %{first} %{last}",
+        ]
+      ],
+      users: [
+        title: "Users",
+      ]
+    ],
+    fr: [
+      flash: [
+        notice: [
+          hello: "salut %{first} %{last}"
+        ]
+      ]
+    ]
+  ]
+  ```
+
+  this module will compile this down to these methods :
+
+  ```elixir
+  def t("en", "flash.notice.hello", bindings \\ []), do: # ...
+  def t("en", "users.title", bindings \\ []), do: # ...
+  def t("fr", "flash.notice.hello", bindings \\ []), do: # ...
+  ```
+  """
+
+  @doc """
+  Compiles all the translations and inject the methods created in the current module.
+  """
   defmacro __using__(options) do
     locales = Dict.fetch! options, :locales
 
@@ -15,6 +54,9 @@ defmodule Linguist.Compiler do
     end
   end
 
+  @doc """
+  Recursively define the `t` methods.
+  """
   def deftranslations(locale, current_path, translations) do
     for {key, val} <- translations do
       path = append_path(current_path, key)
