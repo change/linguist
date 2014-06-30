@@ -37,6 +37,13 @@ defmodule Linguist.Compiler do
   ```
   """
 
+  defmodule NoTranslationError do
+    defexception [:message]
+    def exception(message) do
+      %NoTranslationError{message: "No translation found for #{message}"}
+    end
+  end
+
   @doc """
   Compiles all the translations and inject the methods created in the current module.
   """
@@ -51,6 +58,14 @@ defmodule Linguist.Compiler do
     quote do
       def t(locale, path, binding \\ [])
       unquote(translations)
+      def t(_locale, _path, _bindings), do: {:error, :no_translation}
+      def t!(locale, path, bindings \\ []) do
+        case t(locale, path, bindings) do
+          {:ok, translation} -> translation
+          {:error, :no_translation} ->
+            raise %NoTranslationError{message: "#{locale}: #{path}"}
+        end
+      end
     end
   end
 
@@ -66,7 +81,7 @@ defmodule Linguist.Compiler do
       else
         quote do
           def t(unquote(locale), unquote(path), bindings) do
-            unquote(Compiler.interpolate(val, :bindings))
+            {:ok, unquote(Compiler.interpolate(val, :bindings))}
           end
         end
       end
