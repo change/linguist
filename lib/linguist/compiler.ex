@@ -1,57 +1,35 @@
 defmodule Linguist.Compiler do
-  alias Linguist.Compiler
+  alias Linguist.NoTranslationError
 
-  @moduledoc """
-  This module compiles the given translations in a method `t` of the form `t(locale, path, bindings)`.
+  @doc ~S"""
+  Compiles keyword list of transactions into function definitions AST
 
-  For example, given the following translations :
+  Examples
 
-  ```elixir
-  [
-    en: [
-      flash: [
-        notice: [
-          hello: "hello %{first} %{last}",
-        ]
-      ],
-      users: [
-        title: "Users",
-      ]
-    ],
-    fr: [
-      flash: [
-        notice: [
-          hello: "salut %{first} %{last}"
-        ]
-      ]
-    ]
-  ]
-  ```
+  iex> Linguist.Compiler.compile(en: [
+    hello: "Hello %{name}",
+    alert: "Alert!"
+  ])
 
-  this module will compile this down to these methods :
+  quote do
+    def t(locale, path, binding \\ [])
 
-  ```elixir
-  def t("en", "flash.notice.hello", bindings \\ []), do: # ...
-  def t("en", "users.title", bindings \\ []), do: # ...
-  def t("fr", "flash.notice.hello", bindings \\ []), do: # ...
-  ```
-  """
+    def t("en", "hello", bindings), do: "Hello " <> Dict.fetch!(bindings, :name)
+    def t("en", "alert", bindings), do: "Alert!"
 
-  defmodule NoTranslationError do
-    defexception [:message]
-    def exception(message) do
-      %NoTranslationError{message: "No translation found for #{message}"}
+    def t(_locale, _path, _bindings), do: {:error, :no_translation}
+    def t!(locale, path, bindings \\ []) do
+      case t(locale, path, bindings) do
+        {:ok, translation} -> translation
+        {:error, :no_translation} ->
+          raise %NoTranslationError{message: "#{locale}: #{path}"}
+      end
     end
   end
-
-  @doc """
-  Compiles all the translations and inject the methods created in the current module.
   """
-  defmacro __using__(options) do
-    locales = Dict.fetch! options, :locales
-
+  def compile(translations) do
     translations =
-      for {locale, source} <- locales do
+      for {locale, source} <- translations do
         deftranslations(to_string(locale), "", source)
       end
 
@@ -81,13 +59,17 @@ defmodule Linguist.Compiler do
       else
         quote do
           def t(unquote(locale), unquote(path), bindings) do
-            {:ok, unquote(Compiler.interpolate(val, :bindings))}
+            {:ok, unquote(interpolate(val, :bindings))}
           end
         end
       end
     end
   end
 
+  @doc """
+  Returns the AST for interpolated translation bindings. Uses direct
+  string concatentation for performant lookup at runtime.
+  """
   def interpolate(string, var) do
     Regex.split(~r/(%{[^}]+})/, string) |> Enum.reduce fn
       <<"%{" <> rest>>, acc ->
@@ -103,4 +85,3 @@ defmodule Linguist.Compiler do
   defp append_path("", next), do: to_string(next)
   defp append_path(current, next), do: "#{current}.#{next}"
 end
-

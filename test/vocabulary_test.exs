@@ -2,30 +2,17 @@ defmodule LinguistTest do
   use ExUnit.Case
 
   defmodule I18n do
-    use Linguist.Compiler, locales: [
-      en: [
-        foo: "bar",
-        flash: [
-          notice: [
-            alert: "Alert!",
-            hello: "hello %{first} %{last}",
-            bye: "bye now, %{name}!"
-          ]
-        ],
-        users: [
-          title: "Users",
-          profiles: [
-            title: "Profiles",
-          ]
+    use Linguist.Vocabulary
+
+    locale "en", Path.join([__DIR__, "en.exs"])
+
+    locale "fr", [
+      flash: [
+        notice: [
+          hello: "salut %{first} %{last}"
         ]
-      ],
-      fr: [
-        flash: [
-          notice: [
-            hello: "salut %{first} %{last}"
-          ]
-       ],
-    ]]
+     ]
+    ]
   end
 
   test "it handles translations at rool level" do
@@ -65,7 +52,7 @@ defmodule LinguistTest do
   end
 
   test "t! raises NoTranslationError when translation is missing" do
-    assert_raise Linguist.Compiler.NoTranslationError, fn ->
+    assert_raise Linguist.NoTranslationError, fn ->
       assert I18n.t!("en", "flash.not_exists")
     end
   end
