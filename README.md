@@ -5,31 +5,36 @@
 ## Usage
 
 ```elixir
-  defmodule I18n do
-    use Linguist.Compiler, locales: [
-      en: [
-        flash: [
-          notice: [
-            hello: "hello %{first} %{last}",
-            bye: "bye now, %{name}!"
-          ]
-        ],
-        users: [
-          title: "Users",
-          profiles: [
-            title: "Profiles",
-          ]
-        ]
-      ],
-      fr: [
-        flash: [
-          notice: [
-            hello: "salut %{first} %{last}"
-          ]
-        ]
+defmodule I18n do
+  use Linguist.Vocabulary
+  
+  locale "en", [
+    flash: [
+      notice: [
+        hello: "hello %{first} %{last}",
+        bye: "bye now, %{name}!"
+      ]
+    ],
+    users: [
+      title: "Users",
+      profiles: [
+        title: "Profiles",
       ]
     ]
-  end
+  ]
+  
+  locale "fr", Path.join([__DIR__, "fr.exs"])
+
+end
+
+# fr.exs
+[
+  flash: [
+    notice: [
+      hello: "salut %{first} %{last}"
+    ]
+  ]
+]
 
 iex> I18n.t!("en", "flash.notice.hello", first: "chris", last: "mccord")
 "hello chris mccord"
