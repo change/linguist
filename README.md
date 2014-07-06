@@ -31,13 +31,13 @@
     ]
   end
 
-iex> I18n.t("en", "flash.notice.hello", first: "chris", last: "mccord")
+iex> I18n.t!("en", "flash.notice.hello", first: "chris", last: "mccord")
 "hello chris mccord"
 
-iex> I18n.t("fr", "flash.notice.hello", first: "chris", last: "mccord")
+iex> I18n.t!("fr", "flash.notice.hello", first: "chris", last: "mccord")
 "salut chris mccord"
 
-iex> I18n.t("en", "users.title")
+iex> I18n.t!("en", "users.title")
 "Users"
 ```
 
