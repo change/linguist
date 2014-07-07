@@ -39,10 +39,15 @@ defmodule LinguistTest do
     assert I18n.t("en", "flash.notice.bye", name: "chris") == {:ok, "bye now, chris!"}
   end
 
-  test "raises KeyError when bindings not provided" do
+  test "t raises KeyError when bindings not provided" do
+    assert_raise KeyError, fn ->
+      I18n.t("en", "flash.notice.hello", first: "chris")
+    end
+  end
+
+  test "t! raises KeyError when bindings not provided" do
     assert_raise KeyError, fn ->
       I18n.t!("en", "flash.notice.hello", first: "chris")
-      I18n.t("en", "flash.notice.hello", first: "chris")
     end
   end
 
