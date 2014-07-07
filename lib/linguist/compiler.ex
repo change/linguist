@@ -47,10 +47,7 @@ defmodule Linguist.Compiler do
     end
   end
 
-  @doc """
-  Recursively define the `t` methods.
-  """
-  def deftranslations(locale, current_path, translations) do
+  defp deftranslations(locale, current_path, translations) do
     for {key, val} <- translations do
       path = append_path(current_path, key)
 
@@ -66,11 +63,7 @@ defmodule Linguist.Compiler do
     end
   end
 
-  @doc """
-  Returns the AST for interpolated translation bindings. Uses direct
-  string concatentation for performant lookup at runtime.
-  """
-  def interpolate(string, var) do
+  defp interpolate(string, var) do
     Regex.split(~r/(%{[^}]+})/, string) |> Enum.reduce fn
       <<"%{" <> rest>>, acc ->
         key      = String.to_atom(String.rstrip(rest, ?}))

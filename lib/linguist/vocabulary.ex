@@ -10,7 +10,6 @@ defmodule Linguist.Vocabulary do
 
   For example, given the following translations :
 
-  ```elixir
   locale "en", [
     flash: [
       notice: [
@@ -23,19 +22,16 @@ defmodule Linguist.Vocabulary do
   ]
 
   locale "fr", Path.join([__DIR__, "fr.exs"])
-  ```
 
-  this module will compile this down to these methods :
+  this module will compile this down to these functions :
 
-  ```elixir
   def t("en", "flash.notice.hello", bindings \\ []), do: # ...
   def t("en", "users.title", bindings \\ []), do: # ...
   def t("fr", "flash.notice.hello", bindings \\ []), do: # ...
-  ```
   """
 
   @doc """
-  Compiles all the translations and inject the methods created in the current module.
+  Compiles all the translations and inject the functions created in the current module.
   """
   defmacro __using__(_options) do
     quote do
