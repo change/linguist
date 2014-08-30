@@ -6,8 +6,8 @@ defmodule Linguist.Mixfile do
   def project do
     [
       app: :linguist,
-      version: "0.1.1",
-      elixir: "~> 0.15.0",
+      version: "0.2.0",
+      elixir: "~> 1.0.0-rc2",
       deps: deps,
       package: [
         contributors: ["Chris McCord"],
