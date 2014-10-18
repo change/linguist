@@ -12,7 +12,7 @@ defmodule Linguist.Mixfile do
       package: [
         contributors: ["Chris McCord"],
         licenses: ["MIT"],
-        links: [github: "https://github.com/chrismccord/linguist"]
+        links: %{"GitHub" => "https://github.com/chrismccord/linguist"}
       ],
       description: """
       Elixir Internationalization library
