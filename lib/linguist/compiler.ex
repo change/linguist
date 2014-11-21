@@ -71,7 +71,7 @@ defmodule Linguist.Compiler do
         key      = String.to_atom(String.rstrip(rest, ?}))
         bindings = Macro.var(var, __MODULE__)
         quote do
-          unquote(acc) <> Dict.fetch!(unquote(bindings), unquote(key))
+          unquote(acc) <> to_string(Dict.fetch!(unquote(bindings), unquote(key)))
         end
       segment, acc -> quote do: (unquote(acc) <> unquote(segment))
     end

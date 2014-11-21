@@ -65,5 +65,8 @@ defmodule LinguistTest do
   test "t returns {:error, :no_translation} when translation is missing" do
     assert I18n.t("en", "flash.not_exists") == {:error, :no_translation}
   end
-end
 
+  test "converts interpolation values to string" do
+    assert I18n.t!("fr", "flash.notice.hello", first: 123, last: "mccord") == "salut 123 mccord"
+  end
+end
