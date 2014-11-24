@@ -10,7 +10,8 @@ defmodule LinguistTest do
       flash: [
         notice: [
           hello: "salut %{first} %{last}"
-        ]
+        ],
+        interpolation_at_beginning: "%{name} at beginning",
      ]
     ]
   end
@@ -68,5 +69,9 @@ defmodule LinguistTest do
 
   test "converts interpolation values to string" do
     assert I18n.t!("fr", "flash.notice.hello", first: 123, last: "mccord") == "salut 123 mccord"
+  end
+
+  test "interpolations can exist as the first segment of the translation" do
+    assert I18n.t!("fr", "flash.interpolation_at_beginning", name: "chris") == "chris at beginning"
   end
 end

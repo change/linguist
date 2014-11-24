@@ -64,9 +64,8 @@ defmodule Linguist.Compiler do
   end
 
   defp interpolate(string, var) do
-    ~r/(?<head>)%{[^}]+}(?<tail>)/
-    |> Regex.split(string, on: [:head, :tail])
-    |> Enum.reduce fn
+    ~r/(?<head>)%{[^}]+}(?<tail>)/ |> Regex.split(string, on: [:head, :tail])
+    |> Enum.reduce "", fn
       <<"%{" <> rest>>, acc ->
         key      = String.to_atom(String.rstrip(rest, ?}))
         bindings = Macro.var(var, __MODULE__)
