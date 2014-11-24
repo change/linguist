@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.1.4 (2014-11-24)
+
+* Bug Fixes
+  * Fix bug causing interpolations at beginning of string to be missed
+
+
 ## v0.1.0 (2014-07-06)
 
 * Enhancements
@@ -17,4 +23,3 @@
 ## v0.0.1 (2014-06-28)
 
 Initial release
-
