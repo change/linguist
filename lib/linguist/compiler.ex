@@ -52,7 +52,12 @@ defmodule Linguist.Compiler do
       path = append_path(current_path, key)
 
       if Keyword.keyword?(val) do
-        deftranslations(locale, path, val)
+        quote do
+          def t(unquote(locale), unquote(path), _) do
+            {:ok, unquote(val)}
+          end
+          unquote(deftranslations(locale, path, val))
+        end
       else
         quote do
           def t(unquote(locale), unquote(path), bindings) do

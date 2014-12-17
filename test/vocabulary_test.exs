@@ -74,4 +74,12 @@ defmodule LinguistTest do
   test "interpolations can exist as the first segment of the translation" do
     assert I18n.t!("fr", "flash.interpolation_at_beginning", name: "chris") == "chris at beginning"
   end
+
+  test "it returns list of translations for a given key" do
+    assert I18n.t("en", "flash.notice") ==
+      {:ok, [alert: "Alert!", hello: "hello %{first} %{last}", bye: "bye now, %{name}!"]}
+
+    assert I18n.t!("en", "flash.notice") ==
+      [alert: "Alert!", hello: "hello %{first} %{last}", bye: "bye now, %{name}!"]
+  end
 end
