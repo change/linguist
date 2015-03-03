@@ -28,6 +28,7 @@ defmodule Linguist.Compiler do
   end
   """
   def compile(translations) do
+    langs = Dict.keys translations
     translations =
       for {locale, source} <- translations do
         deftranslations(to_string(locale), "", source)
@@ -43,6 +44,9 @@ defmodule Linguist.Compiler do
           {:error, :no_translation} ->
             raise %NoTranslationError{message: "#{locale}: #{path}"}
         end
+      end
+      def locales do
+        unquote(langs)
       end
     end
   end

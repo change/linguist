@@ -16,6 +16,10 @@ defmodule LinguistTest do
     ]
   end
 
+  test "it returns locales" do
+    assert ["fr", "en"] == I18n.locales
+  end
+
   test "it handles translations at rool level" do
     assert I18n.t!("en", "foo") == "bar"
     assert I18n.t("en", "foo") == {:ok, "bar"}
