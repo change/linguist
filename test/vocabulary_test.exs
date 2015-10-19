@@ -12,7 +12,7 @@ defmodule LinguistTest do
           hello: "salut %{first} %{last}"
         ],
         interpolation_at_beginning: "%{name} at beginning",
-     ]
+      ]
     ]
   end
 
@@ -37,7 +37,7 @@ defmodule LinguistTest do
     assert I18n.t("en", "users.profiles.title") == {:ok, "Profiles"}
   end
 
-  test "it iterpolates bindings" do
+  test "it interpolates bindings" do
     assert I18n.t!("en", "flash.notice.hello", first: "chris", last: "mccord") == "hello chris mccord"
     assert I18n.t("en", "flash.notice.hello", first: "chris", last: "mccord") == {:ok, "hello chris mccord"}
     assert I18n.t!("en", "flash.notice.bye", name: "chris") == "bye now, chris!"
