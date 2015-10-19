@@ -12,7 +12,8 @@
     profiles: [
       title: "Profiles",
     ]
-  ]
+  ],
+  escaped: "%%{escaped}"
 ]
 
 
