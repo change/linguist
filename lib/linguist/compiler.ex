@@ -37,6 +37,12 @@ defmodule Linguist.Compiler do
   @escaped_interpol_rgx ~r/%%{/
   @simple_interpol "%{"
 
+  @plural_keys ["one", "other"]
+  @plural_functions [
+    "one": fn (counter) -> counter == 1 end,
+    "other": fn (counter) -> counter != 1 end
+  ]
+
   def compile(translations) do
     langs = Dict.keys translations
     translations =
@@ -66,7 +72,24 @@ defmodule Linguist.Compiler do
       path = append_path(current_path, key)
 
       if Keyword.keyword?(val) do
-        deftranslations(locale, path, val)
+        if val[:_plural] do
+          quote do
+            def t(unquote(locale), unquote(path), bindings) do
+              cond do
+                bindings[:count] == 0 ->
+                  {:ok, unquote(interpolate(val[:zero] || val[:other], :bindings))}
+                bindings[:count] == 1 ->
+                  {:ok, unquote(interpolate(val[:one] || val[:other], :bindings))}
+                bindings[:count] == 2 ->
+                  {:ok, unquote(interpolate(val[:two] || val[:other], :bindings))}
+                true ->
+                  {:ok, unquote(interpolate(val[:other], :bindings))}
+              end
+            end
+          end
+        else
+          deftranslations(locale, path, val)
+        end
       else
         quote do
           def t(unquote(locale), unquote(path), bindings) do
@@ -78,7 +101,7 @@ defmodule Linguist.Compiler do
   end
 
   defp interpolate(string, var) do
-    @interpol_rgx 
+    @interpol_rgx
       |> Regex.split(string, on: [:head, :tail])
       |> Enum.reduce( "", fn
       <<"%{" <> rest>>, acc ->
