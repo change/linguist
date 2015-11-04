@@ -37,12 +37,6 @@ defmodule Linguist.Compiler do
   @escaped_interpol_rgx ~r/%%{/
   @simple_interpol "%{"
 
-  @plural_keys ["one", "other"]
-  @plural_functions [
-    "one": fn (counter) -> counter == 1 end,
-    "other": fn (counter) -> counter != 1 end
-  ]
-
   def compile(translations) do
     langs = Dict.keys translations
     translations =
