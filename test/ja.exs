@@ -14,9 +14,7 @@
     ],
     friends: [
       _plural: true,
-      zero: "no friends",
-      one: "1 friend",
-      other: "%{count} friends"
+      other: "%{count}人友達"
     ]
   ],
   escaped: "%%{escaped}"
