@@ -66,9 +66,11 @@ defmodule Linguist.Vocabulary do
   """
   defmacro locale(name, source) do
     quote bind_quoted: [name: name, source: source] do
-      if is_binary(source) do
+      source = if is_binary(source) do
         @external_resource source
-        source = Code.eval_file(source) |> elem(0)
+        Code.eval_file(source) |> elem(0)
+      else
+        source
       end
       @locales {name, source}
     end
