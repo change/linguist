@@ -8,7 +8,7 @@ defmodule Linguist.Mixfile do
       app: :linguist,
       version: "0.1.5",
       elixir: "~> 1.0",
-      deps: deps,
+      deps: deps(),
       package: [
         contributors: ["Chris McCord"],
         licenses: ["MIT"],

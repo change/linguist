@@ -14,7 +14,7 @@ defmodule Linguist.Compiler do
   quote do
     def t(locale, path, binding \\ [])
 
-    def t("en", "hello", bindings), do: "Hello " <> Dict.fetch!(bindings, :name)
+    def t("en", "hello", bindings), do: "Hello " <> Keyword.fetch!(bindings, :name)
     def t("en", "alert", bindings), do: "Alert!"
 
     def t(_locale, _path, _bindings), do: {:error, :no_translation}
@@ -38,7 +38,7 @@ defmodule Linguist.Compiler do
   @simple_interpol "%{"
 
   def compile(translations) do
-    langs = Dict.keys translations
+    langs = Keyword.keys translations
     translations =
       for {locale, source} <- translations do
         deftranslations(to_string(locale), "", source)
@@ -85,7 +85,7 @@ defmodule Linguist.Compiler do
         key      = String.to_atom(String.rstrip(rest, ?}))
         bindings = Macro.var(var, __MODULE__)
         quote do
-          unquote(acc) <> to_string(Dict.fetch!(unquote(bindings), unquote(key)))
+          unquote(acc) <> to_string(Keyword.fetch!(unquote(bindings), unquote(key)))
         end
       segment, acc -> quote do: (unquote(acc) <> unquote(unescape(segment)))
     end )
