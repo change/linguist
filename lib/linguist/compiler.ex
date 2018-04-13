@@ -1,5 +1,6 @@
 defmodule Linguist.Compiler do
   alias Linguist.NoTranslationError
+  alias Cldr.Number.Cardinal
 
   @doc ~S"""
   Compiles keyword list of transactions into function definitions AST
@@ -47,7 +48,7 @@ defmodule Linguist.Compiler do
     quote do
       def t(locale, path, binding \\ [])
       unquote(translations)
-      def t(_locale, _path, _bindings), do: {:error, :no_translation}
+      def dot(_locale, _path, _bindings), do: {:error, :no_translation}
       def t!(locale, path, bindings \\ []) do
         case t(locale, path, bindings) do
           {:ok, translation} -> translation
@@ -69,7 +70,22 @@ defmodule Linguist.Compiler do
         deftranslations(locale, path, val)
       else
         quote do
-          def t(unquote(locale), unquote(path), bindings) do
+          def t(locale, path, bindings) do
+            cond do
+              Keyword.has_key?(bindings, :count_var) ->
+                plural_atom =
+                  Cardinal.plural_rule(
+                    Keyword.get(bindings, :count_var),
+                    locale
+                  )
+                  new_path = "#{path}.#{plural_atom}"
+                dot(locale, new_path, bindings)
+              true ->
+                dot(locale, path, bindings)
+            end
+          end
+
+          def dot(unquote(locale), unquote(path), bindings) do
             {:ok, unquote(interpolate(val, :bindings))}
           end
         end

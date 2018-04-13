@@ -12,6 +12,10 @@ defmodule LinguistTest do
           hello: "salut %{first} %{last}"
         ],
         interpolation_at_beginning: "%{name} at beginning",
+      ],
+      apple: [
+        one: "%{count_var} Pomme",
+        other: "%{count_var} pommes"
       ]
     ]
   end
@@ -78,4 +82,12 @@ defmodule LinguistTest do
   test "interpolations can exist as the first segment of the translation" do
     assert I18n.t!("fr", "flash.interpolation_at_beginning", name: "chris") == "chris at beginning"
   end
+
+  describe "pluralizations" do
+    test "pluralizes English correctly" do
+      assert I18n.t!("en", "apple", count_var: 1) == "1 apple"
+      assert I18n.t!("en", "apple", count_var: 2) == "2 apples"
+    end
+  end
+
 end

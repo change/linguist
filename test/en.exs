@@ -13,7 +13,11 @@
       title: "Profiles",
     ]
   ],
-  escaped: "%%{escaped}"
+  escaped: "%%{escaped}",
+  apple: [
+    one: "%{count_var} apple",
+    other: "%{count_var} apples"
+  ]
 ]
 
 

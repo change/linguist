@@ -26,7 +26,8 @@ defmodule Linguist.Mixfile do
 
   defp deps do
     [
-      {:ex_cldr, "~> 1.5"}
+      {:ex_cldr, "~> 1.5"},
+      {:jason, "~> 1.0"}
     ]
   end
 end
