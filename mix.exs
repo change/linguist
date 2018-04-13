@@ -7,15 +7,15 @@ defmodule Linguist.Mixfile do
     [
       app: :linguist,
       version: "0.1.5",
-      elixir: "~> 1.0",
+      elixir: "~> 1.6",
       deps: deps(),
       package: [
-        contributors: ["Chris McCord"],
+        contributors: ["Will Barrett, Chris McCord"],
         licenses: ["MIT"],
-        links: %{github: "https://github.com/chrismccord/linguist"}
+        links: %{github: "https://github.com/change/linguist"}
       ],
       description: """
-      Elixir Internationalization library
+      Elixir Internationalization library, extended to support translation files in the rails-i18n format
       """
     ]
   end
@@ -25,6 +25,8 @@ defmodule Linguist.Mixfile do
   end
 
   defp deps do
-    []
+    [
+      {:ex_cldr, "~> 1.5"}
+    ]
   end
 end
