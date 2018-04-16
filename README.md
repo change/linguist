@@ -46,3 +46,11 @@ iex> I18n.t!("en", "users.title")
 "Users"
 ```
 
+## Configuration
+
+The key to use for pluralization is configurable, and should likely be an atom:
+
+```
+config :linguist, pluralization_key: :count
+```
+will cause the system to pluralize based on the `count` parameter passed to the `t` function.
