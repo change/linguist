@@ -14,8 +14,8 @@ defmodule LinguistTest do
         interpolation_at_beginning: "%{name} at beginning",
       ],
       apple: [
-        one: "%{count_var} Pomme",
-        other: "%{count_var} pommes"
+        one: "%{count} Pomme",
+        other: "%{count} pommes"
       ]
     ]
   end
@@ -85,11 +85,11 @@ defmodule LinguistTest do
 
   describe "pluralizations" do
     test "pluralizes English correctly" do
-      assert I18n.t!("en", "apple", count_var: 1) == "1 apple"
-      assert I18n.t!("en", "apple", count_var: 2) == "2 apples"
+      assert I18n.t!("en", "apple", count: 1) == "1 apple"
+      assert I18n.t!("en", "apple", count: 2) == "2 apples"
     end
 
-    test "throws an error when a pluralized string is not given a count_var" do
+    test "throws an error when a pluralized string is not given a count" do
       assert_raise Linguist.NoTranslationError, fn ->
         I18n.t!("en", "apple")
       end

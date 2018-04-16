@@ -15,8 +15,8 @@
   ],
   escaped: "%%{escaped}",
   apple: [
-    one: "%{count_var} apple",
-    other: "%{count_var} apples"
+    one: "%{count} apple",
+    other: "%{count} apples"
   ]
 ]
 
