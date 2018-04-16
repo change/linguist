@@ -67,7 +67,7 @@ defmodule LinguistTest do
 
   test "t! raises NoTranslationError when translation is missing" do
     assert_raise Linguist.NoTranslationError, fn ->
-      assert I18n.t!("en", "flash.not_exists")
+      I18n.t!("en", "flash.not_exists")
     end
   end
 
