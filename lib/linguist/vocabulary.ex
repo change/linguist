@@ -68,10 +68,10 @@ defmodule Linguist.Vocabulary do
     quote bind_quoted: [name: name, source: source] do
       loaded_source =
         if is_binary(source) do
-            @external_resource source
-            Code.eval_file(source) |> elem(0)
+          @external_resource source
+          Code.eval_file(source) |> elem(0)
         else
-            source
+          source
         end
       @locales {name, loaded_source}
     end

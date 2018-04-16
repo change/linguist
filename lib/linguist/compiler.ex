@@ -73,15 +73,15 @@ defmodule Linguist.Compiler do
           def t(locale, path, bindings) do
             pluralization_key = Application.fetch_env!(:linguist, :pluralization_key)
             if Keyword.has_key?(bindings, pluralization_key) do
-                plural_atom =
-                  Cardinal.plural_rule(
-                    Keyword.get(bindings, pluralization_key),
-                    locale
-                  )
-                  new_path = "#{path}.#{plural_atom}"
-                  do_t(locale, new_path, bindings)
+              plural_atom =
+                Cardinal.plural_rule(
+                  Keyword.get(bindings, pluralization_key),
+                  locale
+                )
+              new_path = "#{path}.#{plural_atom}"
+              do_t(locale, new_path, bindings)
             else
-                do_t(locale, path, bindings)
+              do_t(locale, path, bindings)
             end
           end
 
