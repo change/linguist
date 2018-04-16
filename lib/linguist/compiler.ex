@@ -48,7 +48,7 @@ defmodule Linguist.Compiler do
     quote do
       def t(locale, path, binding \\ [])
       unquote(translations)
-      def dot(_locale, _path, _bindings), do: {:error, :no_translation}
+      def do_t(_locale, _path, _bindings), do: {:error, :no_translation}
       def t!(locale, path, bindings \\ []) do
         case t(locale, path, bindings) do
           {:ok, translation} -> translation
@@ -79,13 +79,13 @@ defmodule Linguist.Compiler do
                     locale
                   )
                   new_path = "#{path}.#{plural_atom}"
-                dot(locale, new_path, bindings)
+                  do_t(locale, new_path, bindings)
               true ->
-                dot(locale, path, bindings)
+                do_t(locale, path, bindings)
             end
           end
 
-          def dot(unquote(locale), unquote(path), bindings) do
+          def do_t(unquote(locale), unquote(path), bindings) do
             {:ok, unquote(interpolate(val, :bindings))}
           end
         end
