@@ -91,7 +91,7 @@ defmodule LinguistTest do
 
     test "throws an error when a pluralized string is not given a count_var" do
       assert_raise Linguist.NoTranslationError, fn ->
-        assert I18n.t!("en", "apple")
+        I18n.t!("en", "apple")
       end
     end
   end
