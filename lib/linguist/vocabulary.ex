@@ -73,9 +73,8 @@ defmodule Linguist.Vocabulary do
         else
           source
         end
+
       @locales {name, loaded_source}
     end
   end
-
 end
-

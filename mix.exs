@@ -1,4 +1,4 @@
-Code.ensure_loaded?(Hex) and Hex.start
+Code.ensure_loaded?(Hex) and Hex.start()
 
 defmodule Linguist.Mixfile do
   use Mix.Project

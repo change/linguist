@@ -1,4 +1,3 @@
 use Mix.Config
 
-config :linguist,
-  pluralization_key: :count
+config :linguist, pluralization_key: :count
