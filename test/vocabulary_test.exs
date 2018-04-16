@@ -12,6 +12,10 @@ defmodule LinguistTest do
           hello: "salut %{first} %{last}"
         ],
         interpolation_at_beginning: "%{name} at beginning",
+      ],
+      apple: [
+        one: "%{count} Pomme",
+        other: "%{count} pommes"
       ]
     ]
   end
@@ -63,7 +67,7 @@ defmodule LinguistTest do
 
   test "t! raises NoTranslationError when translation is missing" do
     assert_raise Linguist.NoTranslationError, fn ->
-      assert I18n.t!("en", "flash.not_exists")
+      I18n.t!("en", "flash.not_exists")
     end
   end
 
@@ -78,4 +82,18 @@ defmodule LinguistTest do
   test "interpolations can exist as the first segment of the translation" do
     assert I18n.t!("fr", "flash.interpolation_at_beginning", name: "chris") == "chris at beginning"
   end
+
+  describe "pluralizations" do
+    test "pluralizes English correctly" do
+      assert I18n.t!("en", "apple", count: 1) == "1 apple"
+      assert I18n.t!("en", "apple", count: 2) == "2 apples"
+    end
+
+    test "throws an error when a pluralized string is not given a count" do
+      assert_raise Linguist.NoTranslationError, fn ->
+        I18n.t!("en", "apple")
+      end
+    end
+  end
+
 end
