@@ -4,24 +4,25 @@ defmodule LinguistTest do
   defmodule I18n do
     use Linguist.Vocabulary
 
-    locale "en", Path.join([__DIR__, "en.exs"])
+    locale("en", Path.join([__DIR__, "en.exs"]))
 
-    locale "fr", [
+    locale(
+      "fr",
       flash: [
         notice: [
           hello: "salut %{first} %{last}"
         ],
-        interpolation_at_beginning: "%{name} at beginning",
+        interpolation_at_beginning: "%{name} at beginning"
       ],
       apple: [
         one: "%{count} Pomme",
         other: "%{count} pommes"
       ]
-    ]
+    )
   end
 
   test "it returns locales" do
-    assert ["fr", "en"] == I18n.locales
+    assert ["fr", "en"] == I18n.locales()
   end
 
   test "it handles translations at rool level" do
@@ -42,8 +43,12 @@ defmodule LinguistTest do
   end
 
   test "it interpolates bindings" do
-    assert I18n.t!("en", "flash.notice.hello", first: "chris", last: "mccord") == "hello chris mccord"
-    assert I18n.t("en", "flash.notice.hello", first: "chris", last: "mccord") == {:ok, "hello chris mccord"}
+    assert I18n.t!("en", "flash.notice.hello", first: "chris", last: "mccord") ==
+             "hello chris mccord"
+
+    assert I18n.t("en", "flash.notice.hello", first: "chris", last: "mccord") ==
+             {:ok, "hello chris mccord"}
+
     assert I18n.t!("en", "flash.notice.bye", name: "chris") == "bye now, chris!"
     assert I18n.t("en", "flash.notice.bye", name: "chris") == {:ok, "bye now, chris!"}
   end
@@ -61,8 +66,11 @@ defmodule LinguistTest do
   end
 
   test "it compiles all locales" do
-    assert I18n.t!("fr", "flash.notice.hello", first: "chris", last: "mccord") == "salut chris mccord"
-    assert I18n.t("fr", "flash.notice.hello", first: "chris", last: "mccord") == {:ok, "salut chris mccord"}
+    assert I18n.t!("fr", "flash.notice.hello", first: "chris", last: "mccord") ==
+             "salut chris mccord"
+
+    assert I18n.t("fr", "flash.notice.hello", first: "chris", last: "mccord") ==
+             {:ok, "salut chris mccord"}
   end
 
   test "t! raises NoTranslationError when translation is missing" do
@@ -80,7 +88,8 @@ defmodule LinguistTest do
   end
 
   test "interpolations can exist as the first segment of the translation" do
-    assert I18n.t!("fr", "flash.interpolation_at_beginning", name: "chris") == "chris at beginning"
+    assert I18n.t!("fr", "flash.interpolation_at_beginning", name: "chris") ==
+             "chris at beginning"
   end
 
   describe "pluralizations" do
@@ -95,5 +104,4 @@ defmodule LinguistTest do
       end
     end
   end
-
 end
