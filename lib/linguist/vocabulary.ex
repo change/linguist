@@ -67,14 +67,32 @@ defmodule Linguist.Vocabulary do
   defmacro locale(name, source) do
     quote bind_quoted: [name: name, source: source] do
       loaded_source =
-        if is_binary(source) do
-          @external_resource source
-          Code.eval_file(source) |> elem(0)
-        else
-          source
+        cond do
+          is_binary(source) && String.ends_with?(source, [".yml", ".yaml"]) ->
+            load_yaml_file(source)
+          is_binary(source) ->
+            @external_resource source
+            Code.eval_file(source) |> elem(0)
+          true ->
+            source
         end
 
       @locales {name, loaded_source}
+    end
+  end
+
+  def load_yaml_file(source) do
+    {:ok, content} = YamlElixir.read_from_file(source)
+    content
+    |> Enum.reduce([], &Linguist.Vocabulary.yaml_reducer/2)
+  end
+
+  def yaml_reducer({key, value}, acc) do
+    IO.write(key)
+    if is_binary(value) do
+      [{String.to_atom(key), value} | acc]
+    else
+      [{String.to_atom(key), Enum.reduce(value, [], &Linguist.Vocabulary.yaml_reducer/2)} | acc]
     end
   end
 end

@@ -3,6 +3,7 @@ defmodule LinguistTest do
 
   defmodule I18n do
     use Linguist.Vocabulary
+    locale("es", Path.join([__DIR__, "es.yml"]))
 
     locale("en", Path.join([__DIR__, "en.exs"]))
 
@@ -22,7 +23,7 @@ defmodule LinguistTest do
   end
 
   test "it returns locales" do
-    assert ["fr", "en"] == I18n.locales()
+    assert ["fr", "en", "es"] == I18n.locales()
   end
 
   test "it handles translations at rool level" do
@@ -103,5 +104,9 @@ defmodule LinguistTest do
         I18n.t!("en", "apple")
       end
     end
+  end
+
+  test "translations in yaml files are loaded successfully" do
+    assert I18n.t!("es", "flash.notice.hello", first: 123, last: "mccord") == "hola 123 mccord"
   end
 end
