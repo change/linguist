@@ -69,7 +69,7 @@ defmodule Linguist.Vocabulary do
       loaded_source =
         cond do
           is_binary(source) && String.ends_with?(source, [".yml", ".yaml"]) ->
-            load_yaml_file(source)
+            Linguist.Vocabulary._load_yaml_file(source)
           is_binary(source) ->
             @external_resource source
             Code.eval_file(source) |> elem(0)
@@ -81,18 +81,24 @@ defmodule Linguist.Vocabulary do
     end
   end
 
-  def load_yaml_file(source) do
-    {:ok, content} = YamlElixir.read_from_file(source)
-    content
-    |> Enum.reduce([], &Linguist.Vocabulary.yaml_reducer/2)
+  @doc """
+  Function used internally to load a yaml file. Please use
+  the `locale` macro with a path to a yaml file - this function
+  will not work as expected if called directly.
+  """
+  def _load_yaml_file(source) do
+    YamlElixir.read_from_file!(source)
+    |> Enum.reduce([], &Linguist.Vocabulary._yaml_reducer/2)
   end
 
-  def yaml_reducer({key, value}, acc) do
-    IO.write(key)
-    if is_binary(value) do
-      [{String.to_atom(key), value} | acc]
-    else
-      [{String.to_atom(key), Enum.reduce(value, [], &Linguist.Vocabulary.yaml_reducer/2)} | acc]
-    end
+  @doc """
+  Recursive function used internally for loading yaml files.
+  Not intended for external use
+  """
+  def _yaml_reducer({key, value}, acc) when is_binary(value) do
+    [{String.to_atom(key), value} | acc]
+  end
+  def _yaml_reducer({key, value}, acc) do
+    [{String.to_atom(key), Enum.reduce(value, [], &Linguist.Vocabulary._yaml_reducer/2)} | acc]
   end
 end
