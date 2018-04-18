@@ -87,7 +87,8 @@ defmodule Linguist.Vocabulary do
   will not work as expected if called directly.
   """
   def _load_yaml_file(source) do
-    YamlElixir.read_from_file!(source)
+    {:ok, [result]} = Yomel.decode_file(source)
+    result
     |> Enum.reduce([], &Linguist.Vocabulary._yaml_reducer/2)
   end
 

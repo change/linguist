@@ -5,4 +5,5 @@
   "jason": {:hex, :jason, "1.0.0", "0f7cfa9bdb23fed721ec05419bcee2b2c21a77e926bce0deda029b5adc716fe2", [:mix], [{:decimal, "~> 1.0", [hex: :decimal, repo: "hexpm", optional: true]}], "hexpm"},
   "yamerl": {:hex, :yamerl, "0.7.0", "e51dba652dce74c20a88294130b48051ebbbb0be7d76f22de064f0f3ccf0aaf5", [:rebar3], [], "hexpm"},
   "yaml_elixir": {:hex, :yaml_elixir, "2.0.0", "5d7c40e039b076c0da1921b2754d4a91bc435ac4434bef633f5506dbafd6b8f2", [:mix], [{:yamerl, "~> 0.5", [hex: :yamerl, repo: "hexpm", optional: false]}], "hexpm"},
+  "yomel": {:hex, :yomel, "0.5.0", "c5a42d1818deda3f85ae14b1f01f6ece22b9ed8e8087012359fc04b59d85f621", [:make, :mix], [], "hexpm"},
 }
