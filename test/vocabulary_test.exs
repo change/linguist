@@ -99,6 +99,11 @@ defmodule VocabularyTest do
       assert I18n.t!("en", "apple", count: 2) == "2 apples"
     end
 
+    test "pluralizes Spanish correctly" do
+      assert I18n.t!("es", "apple", count: 1) == "1 manzana"
+      assert I18n.t!("es", "apple", count: 2) == "2 manzanas"
+    end
+
     test "throws an error when a pluralized string is not given a count" do
       assert_raise Linguist.NoTranslationError, fn ->
         I18n.t!("en", "apple")

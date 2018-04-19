@@ -96,7 +96,7 @@ defmodule Linguist.MemorizedVocabulary do
   def update_translations(name, loaded_source) do
     loaded_source
     |> Enum.map(fn({key, translation_string}) ->
-      :ets.insert(:translations_registry, {key, "#{name}.#{translation_string}"})
+      :ets.insert(:translations_registry, {"#{name}.#{key}", translation_string})
     end)
   end
 
