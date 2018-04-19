@@ -1,4 +1,4 @@
-defmodule LinguistTest do
+defmodule VocabularyTest do
   use ExUnit.Case
 
   defmodule I18n do
