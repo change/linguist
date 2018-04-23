@@ -1,5 +1,4 @@
 defmodule Linguist.MemorizedVocabulary do
-  use GenServer
   alias Linguist.Compiler
   alias Linguist.NoTranslationError
   alias Cldr.Number.Cardinal
@@ -80,14 +79,14 @@ defmodule Linguist.MemorizedVocabulary do
   def locales do
     tuple = :ets.lookup(:translations_registry, "memorized_vocabulary.locales")
     |> List.first()
-    if(tuple) do
+    if tuple do
       elem(tuple, 1)
     end
   end
 
   def add_locale(name) do
-    if locales do
-      :ets.insert(:translations_registry, {"memorized_vocabulary.locales", [name | locales]})
+    if locales() do
+      :ets.insert(:translations_registry, {"memorized_vocabulary.locales", [name | locales()]})
     else
       :ets.insert(:translations_registry, {"memorized_vocabulary.locales", [name]})
     end
@@ -135,7 +134,7 @@ defmodule Linguist.MemorizedVocabulary do
 
     {:ok, [file_data]} = Yomel.decode_file(source)
 
-    %{ paths: paths } = file_data
+    %{paths: paths} = file_data
     |> Enum.reduce(%{paths: %{}, current_prefix: ""}, &Linguist.MemorizedVocabulary._yaml_reducer/2)
     paths
   end

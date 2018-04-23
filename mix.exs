@@ -29,7 +29,8 @@ defmodule Linguist.Mixfile do
     [
       {:ex_cldr, "~> 1.5"},
       {:jason, "~> 1.0"},
-      {:yomel, "~> 0.5"}
+      {:yomel, "~> 0.5"},
+      {:credo, "~> 0.9.0", only: [:dev, :test], runtime: false}
     ]
   end
 end
