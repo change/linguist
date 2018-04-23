@@ -6,7 +6,7 @@ defmodule Linguist.MemorizedVocabulary do
   @moduledoc """
   Defines lookup functions for given translation locales, binding interopolation
 
-  Locales are defined with the `locale/2` macro, accepting a locale name and
+  Locales are defined with the `locale/2` function, accepting a locale name and
   either keyword list of translations or String path to evaluate for
   translations list.
 
@@ -25,11 +25,11 @@ defmodule Linguist.MemorizedVocabulary do
 
   locale "fr", Path.join([__DIR__, "fr.exs"])
 
-  this module will compile this down to these functions :
+  this module will respond to these functions :
 
-  def t("en", "flash.notice.hello", bindings \\ []), do: # ...
-  def t("en", "users.title", bindings \\ []), do: # ...
-  def t("fr", "flash.notice.hello", bindings \\ []), do: # ...
+  t("en", "flash.notice.hello", bindings \\ []), do: # ...
+  t("en", "users.title", bindings \\ []), do: # ...
+  t("fr", "flash.notice.hello", bindings \\ []), do: # ...
   """
 
   def t(locale, path, bindings \\ []) do
