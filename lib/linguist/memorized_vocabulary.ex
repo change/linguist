@@ -62,7 +62,7 @@ defmodule Linguist.MemorizedVocabulary do
       [] -> {:error, :no_translation}
       [{_, string}] ->
         translation =
-          Compiler.interpol_rgx
+          Compiler.interpol_rgx()
           |> Regex.split(string, on: [:head, :tail])
           |> Enum.reduce("", fn
             <<"%{" <> rest>>, acc ->
