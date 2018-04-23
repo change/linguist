@@ -7,8 +7,7 @@ defmodule Linguist.MemorizedVocabulary do
   Defines lookup functions for given translation locales, binding interopolation
 
   Locales are defined with the `locale/2` function, accepting a locale name and
-  either keyword list of translations or String path to evaluate for
-  translations list.
+  a String path to evaluate for the translations list.
 
   For example, given the following translations :
 
@@ -57,8 +56,7 @@ defmodule Linguist.MemorizedVocabulary do
   end
 
   defp do_t(locale, translation_key, bindings \\ []) do
-    translation_key = :ets.lookup(:translations_registry, "#{locale}.#{translation_key}")
-    case translation_key do
+    case :ets.lookup(:translations_registry, "#{locale}.#{translation_key}") do
       [] -> {:error, :no_translation}
       [{_, string}] ->
         translation =
@@ -107,14 +105,7 @@ defmodule Linguist.MemorizedVocabulary do
 
   Examples
 
-  locale "en", [
-    flash: [
-      notice: [
-        hello: "hello %{first} %{last}",
-      ]
-    ]
-  ]
-  locale "fr", Path.join([__DIR__, "fr.exs"])
+  locale "es", Path.join([__DIR__, "es.yml"])
   """
   def locale(name, source) do
     loaded_source = Linguist.MemorizedVocabulary._load_yaml_file(source)
