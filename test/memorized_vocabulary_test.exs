@@ -3,7 +3,7 @@ defmodule MemorizedVocabularyTest do
 
   setup do
     Linguist.MemorizedVocabulary.locale("es", Path.join([__DIR__, "es.yml"]))
-    {:ok, foo: 'bar'}
+    :ok
   end
 
   test "locales() returns locales" do
