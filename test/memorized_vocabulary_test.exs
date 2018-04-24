@@ -2,8 +2,8 @@ defmodule MemorizedVocabularyTest do
   use ExUnit.Case
 
   setup do
-    foo = Linguist.MemorizedVocabulary.locale("es", Path.join([__DIR__, "es.yml"]))
-    {:ok, foo: foo}
+    Linguist.MemorizedVocabulary.locale("es", Path.join([__DIR__, "es.yml"]))
+    {:ok, foo: 'bar'}
   end
 
   test "locales() returns locales" do
