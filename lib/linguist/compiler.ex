@@ -34,6 +34,9 @@ defmodule Linguist.Compiler do
                    (?<!%) %{.+?}
                    (?<tail>)
                    /x
+  def interpol_rgx do
+    @interpol_rgx
+  end
 
   @escaped_interpol_rgx ~r/%%{/
   @simple_interpol "%{"

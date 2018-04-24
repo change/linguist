@@ -7,6 +7,7 @@ defmodule Linguist.Mixfile do
     [
       app: :linguist,
       version: "0.1.5",
+      compilers: Mix.compilers ++ [:cldr],
       elixir: "~> 1.6",
       deps: deps(),
       package: [
@@ -21,14 +22,15 @@ defmodule Linguist.Mixfile do
   end
 
   def application do
-    [applications: [:yaml_elixir]]
+    [applications: []]
   end
 
   defp deps do
     [
       {:ex_cldr, "~> 1.5"},
       {:jason, "~> 1.0"},
-      {:yaml_elixir, "~> 2.0"}
+      {:yomel, "~> 0.5"},
+      {:credo, "~> 0.9.0", only: [:dev, :test], runtime: false}
     ]
   end
 end

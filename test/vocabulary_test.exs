@@ -1,4 +1,4 @@
-defmodule LinguistTest do
+defmodule VocabularyTest do
   use ExUnit.Case
 
   defmodule I18n do
@@ -97,6 +97,11 @@ defmodule LinguistTest do
     test "pluralizes English correctly" do
       assert I18n.t!("en", "apple", count: 1) == "1 apple"
       assert I18n.t!("en", "apple", count: 2) == "2 apples"
+    end
+
+    test "pluralizes Spanish correctly" do
+      assert I18n.t!("es", "apple", count: 1) == "1 manzana"
+      assert I18n.t!("es", "apple", count: 2) == "2 manzanas"
     end
 
     test "throws an error when a pluralized string is not given a count" do
