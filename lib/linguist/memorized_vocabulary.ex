@@ -3,6 +3,10 @@ defmodule Linguist.MemorizedVocabulary do
   alias Linguist.NoTranslationError
   alias Cldr.Number.Cardinal
 
+  defmodule TranslationDecodeError do
+    defexception [:message]
+  end
+
   @moduledoc """
   Defines lookup functions for given translation locales, binding interopolation
 
@@ -120,7 +124,10 @@ defmodule Linguist.MemorizedVocabulary do
       :ets.new(:translations_registry, [:named_table, :set, :protected])
     end
 
-    {:ok, [file_data]} = Yomel.decode_file(source)
+    {decode_status, [file_data]} = Yomel.decode_file(source)
+    if decode_status != :ok do
+      raise %TranslationDecodeError{message: "Decode failed for file #{source}"}
+    end
 
     %{paths: paths} = file_data
     |> Enum.reduce(%{paths: %{}, current_prefix: ""}, &Linguist.MemorizedVocabulary._yaml_reducer/2)
