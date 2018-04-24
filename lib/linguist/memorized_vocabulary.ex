@@ -83,17 +83,14 @@ defmodule Linguist.MemorizedVocabulary do
   end
 
   def add_locale(name) do
-    if locales() do
-      :ets.insert(:translations_registry, {"memorized_vocabulary.locales", [name | locales()]})
-    else
-      :ets.insert(:translations_registry, {"memorized_vocabulary.locales", [name]})
-    end
+    current_locales = locales() || []
+    :ets.insert(:translations_registry, {"memorized_vocabulary.locales", [name | current_locales]})
   end
 
-  def update_translations(name, loaded_source) do
+  def update_translations(locale_name, loaded_source) do
     loaded_source
     |> Enum.map(fn({key, translation_string}) ->
-      :ets.insert(:translations_registry, {"#{name}.#{key}", translation_string})
+      :ets.insert(:translations_registry, {"#{locale_name}.#{key}", translation_string})
     end)
   end
 
