@@ -55,7 +55,7 @@ defmodule Linguist.MemorizedVocabulary do
     end
   end
 
-  defp do_t(locale, translation_key, bindings \\ []) do
+  defp do_t(locale, translation_key, bindings) do
     case :ets.lookup(:translations_registry, "#{locale}.#{translation_key}") do
       [] -> {:error, :no_translation}
       [{_, string}] ->
@@ -64,7 +64,7 @@ defmodule Linguist.MemorizedVocabulary do
           |> Regex.split(string, on: [:head, :tail])
           |> Enum.reduce("", fn
             <<"%{" <> rest>>, acc ->
-              key = String.to_atom(String.rstrip(rest, ?}))
+              key = String.to_atom(String.trim_trailing(rest, "}"))
 
               acc <> to_string(Keyword.fetch!(bindings, key))
             segment, acc ->
