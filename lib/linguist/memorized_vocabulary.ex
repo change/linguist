@@ -44,8 +44,7 @@ defmodule Linguist.MemorizedVocabulary do
           locale
         )
 
-      new_path = "#{path}.#{plural_atom}"
-      do_t(locale, new_path, bindings)
+      do_t(locale, "#{path}.#{plural_atom}", bindings)
     else
       do_t(locale, path, bindings)
     end
