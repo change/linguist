@@ -123,7 +123,7 @@ defmodule Linguist.MemorizedVocabulary do
       :ets.new(:translations_registry, [:named_table, :set, :protected])
     end
 
-    {decode_status, [file_data]} = Yomel.decode_file(source)
+    {decode_status, [file_data]} = YamlElixir.read_all_from_file(source)
     if decode_status != :ok do
       raise %TranslationDecodeError{message: "Decode failed for file #{source}"}
     end
@@ -144,7 +144,7 @@ defmodule Linguist.MemorizedVocabulary do
       "#{acc.current_prefix}.#{key}"
     end
 
-    %{ 
+    %{
       paths: Map.put(acc.paths, key_name, value),
       current_prefix: acc.current_prefix
     }

@@ -22,14 +22,14 @@ defmodule Linguist.Mixfile do
   end
 
   def application do
-    [applications: []]
+    [applications: [:yaml_elixir]]
   end
 
   defp deps do
     [
       {:ex_cldr, "~> 1.5"},
       {:jason, "~> 1.0"},
-      {:yomel, "~> 0.5"},
+      {:yaml_elixir, "~> 2.0"},
       {:credo, "~> 0.9.0", only: [:dev, :test], runtime: false}
     ]
   end
