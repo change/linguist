@@ -37,16 +37,27 @@ defmodule Linguist.MemorizedVocabulary do
 
   def t(locale, path, bindings \\ []) do
     pluralization_key = Application.fetch_env!(:linguist, :pluralization_key)
+    norm_locale = normalize_locale(locale)
+
     if Keyword.has_key?(bindings, pluralization_key) do
       plural_atom =
         Cardinal.plural_rule(
           Keyword.get(bindings, pluralization_key),
-          locale
+          norm_locale
         )
 
-      do_t(locale, "#{path}.#{plural_atom}", bindings)
+      do_t(norm_locale, "#{path}.#{plural_atom}", bindings)
     else
-      do_t(locale, path, bindings)
+      do_t(norm_locale, path, bindings)
+    end
+  end
+
+  defp normalize_locale(locale) do
+    if String.match?(locale, ~r/-/) do
+      [lang, country] = String.split(locale, "-")
+      Enum.join([lang, String.upcase(country)], "-")
+    else
+      locale
     end
   end
 
