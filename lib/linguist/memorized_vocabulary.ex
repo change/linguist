@@ -57,7 +57,7 @@ defmodule Linguist.MemorizedVocabulary do
       [lang, country] = String.split(locale, "-")
       Enum.join([String.downcase(lang), String.upcase(country)], "-")
     else
-      locale
+      String.downcase(locale)
     end
   end
 
