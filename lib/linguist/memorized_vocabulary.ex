@@ -55,7 +55,7 @@ defmodule Linguist.MemorizedVocabulary do
   defp normalize_locale(locale) do
     if String.match?(locale, ~r/-/) do
       [lang, country] = String.split(locale, "-")
-      Enum.join([lang, String.upcase(country)], "-")
+      Enum.join([String.downcase(lang), String.upcase(country)], "-")
     else
       locale
     end
