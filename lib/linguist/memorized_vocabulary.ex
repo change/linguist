@@ -1,6 +1,6 @@
 defmodule Linguist.MemorizedVocabulary do
   alias Linguist.Compiler
-  alias Linguist.NoTranslationError
+  alias Linguist.{NoTranslationError, LocaleError}
   alias Cldr.Number.Cardinal
 
   defmodule TranslationDecodeError do
@@ -34,8 +34,10 @@ defmodule Linguist.MemorizedVocabulary do
   t("en", "users.title", bindings \\ []), do: # ...
   t("fr", "flash.notice.hello", bindings \\ []), do: # ...
   """
+  def t(locale, path, bindings \\ [])
+  def t(nil, _, _), do: raise(LocaleError, nil)
 
-  def t(locale, path, bindings \\ []) do
+  def t(locale, path, bindings) do
     pluralization_key = Application.fetch_env!(:linguist, :pluralization_key)
     norm_locale = normalize_locale(locale)
 
@@ -49,15 +51,6 @@ defmodule Linguist.MemorizedVocabulary do
       do_t(norm_locale, "#{path}.#{plural_atom}", bindings)
     else
       do_t(norm_locale, path, bindings)
-    end
-  end
-
-  defp normalize_locale(locale) do
-    if String.match?(locale, ~r/-/) do
-      [lang, country] = String.split(locale, "-")
-      Enum.join([String.downcase(lang), String.upcase(country)], "-")
-    else
-      String.downcase(locale)
     end
   end
 
@@ -180,5 +173,25 @@ defmodule Linguist.MemorizedVocabulary do
       paths: Map.merge(acc.paths, reduced.paths),
       current_prefix: acc.current_prefix
     }
+  end
+
+  # @privatedoc
+  # Takes a locale as an argument, checks if the string contains a `-`, if so
+  # splits the string on the `-` downcases the first part and upcases the second part.
+  # With a locale that contains no `-` the string is downcased, and if the locale contains more
+  # than one `-`, a LocaleError is raised.
+  def normalize_locale(locale) do
+    if String.match?(locale, ~r/-/) do
+      case String.split(locale, "-") do
+        [lang, country] ->
+          Enum.join([String.downcase(lang), String.upcase(country)], "-")
+
+        _ ->
+          raise(LocaleError, locale)
+      end
+
+    else
+      String.downcase(locale)
+    end
   end
 end

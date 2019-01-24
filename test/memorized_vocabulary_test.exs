@@ -36,4 +36,14 @@ defmodule MemorizedVocabularyTest do
   test "t will normalize a locale to format ll-LL" do
     assert {:ok, "Ennui"} == Linguist.MemorizedVocabulary.t("FR-fr", "flash.notice.alert")
   end
+
+  test "t will raise a LocaleError if a malformed locale is passed in" do
+    assert_raise Linguist.LocaleError, fn ->
+      Linguist.MemorizedVocabulary.t("es-es-es", "flash.notice.alert")
+    end
+
+    assert_raise Linguist.LocaleError, fn -> 
+      Linguist.MemorizedVocabulary.t(nil, "flash.notice.alert")
+    end
+  end
 end
