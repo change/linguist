@@ -3,11 +3,12 @@ defmodule MemorizedVocabularyTest do
 
   setup do
     Linguist.MemorizedVocabulary.locale("es", Path.join([__DIR__, "es.yml"]))
+    Linguist.MemorizedVocabulary.locale("fr-FR", Path.join([__DIR__, "fr-FR.yml"]))
     :ok
   end
 
   test "locales() returns locales" do
-    assert ["es"] == Linguist.MemorizedVocabulary.locales()
+    assert ["fr-FR", "es"] == Linguist.MemorizedVocabulary.locales()
   end
 
   test "t returns a translation" do
@@ -30,5 +31,19 @@ defmodule MemorizedVocabularyTest do
 
   test "t pluralizes" do
     assert {:ok, "2 manzanas"} == Linguist.MemorizedVocabulary.t("es", "apple", count: 2)
+  end
+
+  test "t will normalize a locale to format ll-LL" do
+    assert {:ok, "Ennui"} == Linguist.MemorizedVocabulary.t("FR-fr", "flash.notice.alert")
+  end
+
+  test "t will raise a LocaleError if a malformed locale is passed in" do
+    assert_raise Linguist.LocaleError, fn ->
+      Linguist.MemorizedVocabulary.t("es-es-es", "flash.notice.alert")
+    end
+
+    assert_raise Linguist.LocaleError, fn -> 
+      Linguist.MemorizedVocabulary.t(nil, "flash.notice.alert")
+    end
   end
 end
