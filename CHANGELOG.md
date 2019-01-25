@@ -1,4 +1,6 @@
 # Changelog
+## v0.2.1 (2018-01-25)
+* Add helper function form normalizing locales argument in MemorizedVocubalary.t/3. Locales will be made into the format "es-ES" or "es"
 
 ## v0.1.4 (2014-11-24)
 
