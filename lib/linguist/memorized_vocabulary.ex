@@ -62,6 +62,7 @@ defmodule Linguist.MemorizedVocabulary do
     end
   end
 
+  # sobelow_skip ["DOS.StringToAtom"]
   defp do_t(locale, translation_key, bindings) do
     case :ets.lookup(:translations_registry, "#{locale}.#{translation_key}") do
       [] -> {:error, :no_translation}

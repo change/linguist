@@ -96,9 +96,12 @@ defmodule Linguist.Vocabulary do
   Recursive function used internally for loading yaml files.
   Not intended for external use
   """
+  # sobelow_skip ["DOS.StringToAtom"]
   def _yaml_reducer({key, value}, acc) when is_binary(value) do
     [{String.to_atom(key), value} | acc]
   end
+
+  # sobelow_skip ["DOS.StringToAtom"]
   def _yaml_reducer({key, value}, acc) do
     [{String.to_atom(key), Enum.reduce(value, [], &Linguist.Vocabulary._yaml_reducer/2)} | acc]
   end
