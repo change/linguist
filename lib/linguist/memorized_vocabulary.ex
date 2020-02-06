@@ -56,7 +56,9 @@ defmodule Linguist.MemorizedVocabulary do
 
   def t!(locale, path, bindings \\ []) do
     case t(locale, path, bindings) do
-      {:ok, translation} -> translation
+      {:ok, translation} ->
+        translation
+
       {:error, :no_translation} ->
         raise %NoTranslationError{message: "#{locale}: #{path}"}
     end
@@ -65,7 +67,9 @@ defmodule Linguist.MemorizedVocabulary do
   # sobelow_skip ["DOS.StringToAtom"]
   defp do_t(locale, translation_key, bindings) do
     case :ets.lookup(:translations_registry, "#{locale}.#{translation_key}") do
-      [] -> {:error, :no_translation}
+      [] ->
+        {:error, :no_translation}
+
       [{_, string}] ->
         translation =
           Compiler.interpol_rgx()
@@ -75,16 +79,20 @@ defmodule Linguist.MemorizedVocabulary do
               key = String.to_atom(String.trim_trailing(rest, "}"))
 
               acc <> to_string(Keyword.fetch!(bindings, key))
+
             segment, acc ->
               acc <> segment
-            end)
+          end)
+
         {:ok, translation}
     end
   end
 
   def locales do
-    tuple = :ets.lookup(:translations_registry, "memorized_vocabulary.locales")
-    |> List.first()
+    tuple =
+      :ets.lookup(:translations_registry, "memorized_vocabulary.locales")
+      |> List.first()
+
     if tuple do
       elem(tuple, 1)
     end
@@ -92,12 +100,16 @@ defmodule Linguist.MemorizedVocabulary do
 
   def add_locale(name) do
     current_locales = locales() || []
-    :ets.insert(:translations_registry, {"memorized_vocabulary.locales", [name | current_locales]})
+
+    :ets.insert(
+      :translations_registry,
+      {"memorized_vocabulary.locales", [name | current_locales]}
+    )
   end
 
   def update_translations(locale_name, loaded_source) do
     loaded_source
-    |> Enum.map(fn({key, translation_string}) ->
+    |> Enum.map(fn {key, translation_string} ->
       :ets.insert(:translations_registry, {"#{locale_name}.#{key}", translation_string})
     end)
   end
@@ -129,12 +141,18 @@ defmodule Linguist.MemorizedVocabulary do
     end
 
     {decode_status, [file_data]} = YamlElixir.read_all_from_file(source)
+
     if decode_status != :ok do
       raise %TranslationDecodeError{message: "Decode failed for file #{source}"}
     end
 
-    %{paths: paths} = file_data
-    |> Enum.reduce(%{paths: %{}, current_prefix: ""}, &Linguist.MemorizedVocabulary._yaml_reducer/2)
+    %{paths: paths} =
+      file_data
+      |> Enum.reduce(
+        %{paths: %{}, current_prefix: ""},
+        &Linguist.MemorizedVocabulary._yaml_reducer/2
+      )
+
     paths
   end
 
@@ -143,32 +161,36 @@ defmodule Linguist.MemorizedVocabulary do
   Not intended for external use
   """
   def _yaml_reducer({key, value}, acc) when is_binary(value) do
-    key_name = if acc.current_prefix == "" do
-      key
-    else
-      "#{acc.current_prefix}.#{key}"
-    end
+    key_name =
+      if acc.current_prefix == "" do
+        key
+      else
+        "#{acc.current_prefix}.#{key}"
+      end
 
     %{
       paths: Map.put(acc.paths, key_name, value),
       current_prefix: acc.current_prefix
     }
   end
-  def _yaml_reducer({key, value}, acc) do
-    next_prefix = if acc.current_prefix == "" do
-      key
-    else
-      "#{acc.current_prefix}.#{key}"
-    end
 
-    reduced = Enum.reduce(
-      value,
-      %{
-        paths: acc.paths,
-        current_prefix: next_prefix
-      },
-      &Linguist.MemorizedVocabulary._yaml_reducer/2
-    )
+  def _yaml_reducer({key, value}, acc) do
+    next_prefix =
+      if acc.current_prefix == "" do
+        key
+      else
+        "#{acc.current_prefix}.#{key}"
+      end
+
+    reduced =
+      Enum.reduce(
+        value,
+        %{
+          paths: acc.paths,
+          current_prefix: next_prefix
+        },
+        &Linguist.MemorizedVocabulary._yaml_reducer/2
+      )
 
     %{
       paths: Map.merge(acc.paths, reduced.paths),
@@ -190,7 +212,6 @@ defmodule Linguist.MemorizedVocabulary do
         _ ->
           raise(LocaleError, locale)
       end
-
     else
       String.downcase(locale)
     end

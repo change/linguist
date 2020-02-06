@@ -70,9 +70,11 @@ defmodule Linguist.Vocabulary do
         cond do
           is_binary(source) && String.ends_with?(source, [".yml", ".yaml"]) ->
             Linguist.Vocabulary._load_yaml_file(source)
+
           is_binary(source) ->
             @external_resource source
             Code.eval_file(source) |> elem(0)
+
           true ->
             source
         end
@@ -88,6 +90,7 @@ defmodule Linguist.Vocabulary do
   """
   def _load_yaml_file(source) do
     {:ok, [result]} = YamlElixir.read_all_from_file(source)
+
     result
     |> Enum.reduce([], &Linguist.Vocabulary._yaml_reducer/2)
   end

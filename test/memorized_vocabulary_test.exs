@@ -16,7 +16,13 @@ defmodule MemorizedVocabularyTest do
   end
 
   test "t interpolates values" do
-    assert {:ok, "hola Michael Westin"} == Linguist.MemorizedVocabulary.t("es", "flash.notice.hello", first: "Michael", last: "Westin")
+    assert {:ok, "hola Michael Westin"} ==
+             Linguist.MemorizedVocabulary.t(
+               "es",
+               "flash.notice.hello",
+               first: "Michael",
+               last: "Westin"
+             )
   end
 
   test "t returns {:error, :no_translation} when translation is missing" do
@@ -42,7 +48,7 @@ defmodule MemorizedVocabularyTest do
       Linguist.MemorizedVocabulary.t("es-es-es", "flash.notice.alert")
     end
 
-    assert_raise Linguist.LocaleError, fn -> 
+    assert_raise Linguist.LocaleError, fn ->
       Linguist.MemorizedVocabulary.t(nil, "flash.notice.alert")
     end
   end
