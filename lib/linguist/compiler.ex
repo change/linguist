@@ -103,6 +103,7 @@ defmodule Linguist.Compiler do
     end
   end
 
+  # sobelow_skip ["DOS.StringToAtom"]
   defp interpolate(string, var) do
     @interpol_rgx
     |> Regex.split(string, on: [:head, :tail])

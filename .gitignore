@@ -3,3 +3,12 @@
 erl_crash.dump
 *.ez
 .tmux.rb
+
+# OSX's favorite useless file
+.DS_Store
+
+# VS Code plugin
+/.elixir_ls/
+
+# Generated sobelow file
+.sobelow
