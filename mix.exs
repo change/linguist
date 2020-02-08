@@ -8,7 +8,7 @@ defmodule Linguist.Mixfile do
       app: :linguist,
       version: "0.2.1",
       compilers: Mix.compilers() ++ [:cldr],
-      elixir: "~> 1.6",
+      elixir: "~> 1.9.1",
       deps: deps(),
       package: [
         contributors: ["Will Barrett, Chris McCord"],
@@ -27,7 +27,7 @@ defmodule Linguist.Mixfile do
 
   defp deps do
     [
-      {:ex_cldr, "~> 1.6.0"},
+      {:ex_cldr, "~> 2.0"},
       {:jason, "~> 1.0"},
       {:yaml_elixir, "~> 2.0"},
       {:credo, "~> 0.9.0", only: [:dev, :test], runtime: false},
