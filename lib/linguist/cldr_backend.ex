@@ -4,5 +4,8 @@ defmodule Linguist.Cldr do
   """
   use Cldr,
     otp_app: :linguist,
-    providers: []
+    providers: [],
+    data_dir: "./priv/cldr",
+    default_locale: "en",
+    locales: ["fr", "en", "es"]
 end

@@ -2,9 +2,6 @@ use Mix.Config
 
 config :linguist, pluralization_key: :count
 
-config :ex_cldr, json_library: Jason, default_backend: Linguist.Cldr
+config :ex_cldr, json_library: Jason
 
-config :linguist, Linguist.Cldr,
-  default_locale: "en",
-  data_dir: "./priv/cldr",
-  locales: ["fr", "en", "es"]
+# config :linguist, Linguist.Cldr, locales: ["fr", "en", "es"]
