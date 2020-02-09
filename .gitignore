@@ -11,7 +11,7 @@ erl_crash.dump
 /.elixir_ls/
 
 # cldr locale files
-# /priv/cldr
+/priv/cldr
 
 # Generated sobelow file
 .sobelow
