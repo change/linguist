@@ -1,0 +1,15 @@
+---
+foo: "bar"
+flash:
+  notice:
+    alert: "Alerta!"
+    hello: "hola %{first} %{last}"
+    bye: "adios, %{name}!"
+users:
+  title: "Usuarios"
+  profiles:
+    title: "Perfiles"
+escaped: "%%{escaped}"
+apple:
+  one: "%{count} manzana"
+  other: "%{count} manzanas"

@@ -66,13 +66,46 @@ defmodule Linguist.Vocabulary do
   """
   defmacro locale(name, source) do
     quote bind_quoted: [name: name, source: source] do
-      if is_binary(source) do
-        @external_resource source
-        source = Code.eval_file(source) |> elem(0)
-      end
-      @locales {name, source}
+      loaded_source =
+        cond do
+          is_binary(source) && String.ends_with?(source, [".yml", ".yaml"]) ->
+            Linguist.Vocabulary._load_yaml_file(source)
+
+          is_binary(source) ->
+            @external_resource source
+            Code.eval_file(source) |> elem(0)
+
+          true ->
+            source
+        end
+
+      @locales {name, loaded_source}
     end
   end
 
-end
+  @doc """
+  Function used internally to load a yaml file. Please use
+  the `locale` macro with a path to a yaml file - this function
+  will not work as expected if called directly.
+  """
+  def _load_yaml_file(source) do
+    {:ok, [result]} = YamlElixir.read_all_from_file(source)
 
+    result
+    |> Enum.reduce([], &Linguist.Vocabulary._yaml_reducer/2)
+  end
+
+  @doc """
+  Recursive function used internally for loading yaml files.
+  Not intended for external use
+  """
+  # sobelow_skip ["DOS.StringToAtom"]
+  def _yaml_reducer({key, value}, acc) when is_binary(value) do
+    [{String.to_atom(key), value} | acc]
+  end
+
+  # sobelow_skip ["DOS.StringToAtom"]
+  def _yaml_reducer({key, value}, acc) do
+    [{String.to_atom(key), Enum.reduce(value, [], &Linguist.Vocabulary._yaml_reducer/2)} | acc]
+  end
+end

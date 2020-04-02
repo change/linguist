@@ -1,4 +1,4 @@
-Code.ensure_loaded?(Hex) and Hex.start
+Code.ensure_loaded?(Hex) and Hex.start()
 
 defmodule Linguist.Mixfile do
   use Mix.Project
@@ -6,25 +6,32 @@ defmodule Linguist.Mixfile do
   def project do
     [
       app: :linguist,
-      version: "0.1.5",
-      elixir: "~> 1.0",
-      deps: deps,
+      version: "0.2.1",
+      compilers: Mix.compilers() ++ [:cldr],
+      elixir: "~> 1.6",
+      deps: deps(),
       package: [
-        contributors: ["Chris McCord"],
+        contributors: ["Will Barrett, Chris McCord"],
         licenses: ["MIT"],
-        links: %{github: "https://github.com/chrismccord/linguist"}
+        links: %{github: "https://github.com/change/linguist"}
       ],
       description: """
-      Elixir Internationalization library
+      Elixir Internationalization library, extended to support translation files in the rails-i18n format
       """
     ]
   end
 
   def application do
-    [applications: []]
+    [applications: [:yaml_elixir]]
   end
 
   defp deps do
-    []
+    [
+      {:ex_cldr, "~> 1.6.0"},
+      {:jason, "~> 1.0"},
+      {:yaml_elixir, "~> 2.0"},
+      {:credo, "~> 0.9.0", only: [:dev, :test], runtime: false},
+      {:sobelow, "~> 0.10", only: :dev, runtime: false}
+    ]
   end
 end

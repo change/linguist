@@ -10,10 +10,12 @@
   users: [
     title: "Users",
     profiles: [
-      title: "Profiles",
+      title: "Profiles"
     ]
   ],
-  escaped: "%%{escaped}"
+  escaped: "%%{escaped}",
+  apple: [
+    one: "%{count} apple",
+    other: "%{count} apples"
+  ]
 ]
-
-
