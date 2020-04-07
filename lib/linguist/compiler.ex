@@ -1,6 +1,6 @@
 defmodule Linguist.Compiler do
+  alias Linguist.Cldr.Number.Cardinal
   alias Linguist.NoTranslationError
-  alias Cldr.Number.Cardinal
 
   @doc ~S"""
   Compiles keyword list of transactions into function definitions AST
@@ -83,10 +83,9 @@ defmodule Linguist.Compiler do
 
             if Keyword.has_key?(bindings, pluralization_key) do
               plural_atom =
-                Cardinal.plural_rule(
-                  Keyword.get(bindings, pluralization_key),
-                  locale
-                )
+                bindings
+                |> Keyword.get(pluralization_key)
+                |> Cardinal.plural_rule(locale)
 
               new_path = "#{path}.#{plural_atom}"
               do_t(locale, new_path, bindings)
@@ -109,7 +108,7 @@ defmodule Linguist.Compiler do
     |> Regex.split(string, on: [:head, :tail])
     |> Enum.reduce("", fn
       <<"%{" <> rest>>, acc ->
-        key = String.to_atom(String.rstrip(rest, ?}))
+        key = String.to_atom(String.trim_trailing(rest, "}"))
         bindings = Macro.var(var, __MODULE__)
 
         quote do

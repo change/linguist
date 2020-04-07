@@ -1,7 +1,7 @@
 defmodule Linguist.MemorizedVocabulary do
+  alias Linguist.Cldr.Number.Cardinal
   alias Linguist.Compiler
-  alias Linguist.{NoTranslationError, LocaleError}
-  alias Cldr.Number.Cardinal
+  alias Linguist.{LocaleError, NoTranslationError}
 
   defmodule TranslationDecodeError do
     defexception [:message]
@@ -43,10 +43,9 @@ defmodule Linguist.MemorizedVocabulary do
 
     if Keyword.has_key?(bindings, pluralization_key) do
       plural_atom =
-        Cardinal.plural_rule(
-          Keyword.get(bindings, pluralization_key),
-          norm_locale
-        )
+        bindings
+        |> Keyword.get(pluralization_key)
+        |> Cardinal.plural_rule(norm_locale)
 
       do_t(norm_locale, "#{path}.#{plural_atom}", bindings)
     else

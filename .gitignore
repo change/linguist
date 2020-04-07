@@ -10,5 +10,8 @@ erl_crash.dump
 # VS Code plugin
 /.elixir_ls/
 
+# cldr locale files
+/priv/cldr
+
 # Generated sobelow file
 .sobelow
