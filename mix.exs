@@ -8,7 +8,7 @@ defmodule Linguist.Mixfile do
       app: :linguist,
       version: "0.2.1",
       compilers: Mix.compilers() ++ [:cldr],
-      elixir: "~> 1.9.1",
+      elixir: "~> 1.6",
       deps: deps(),
       package: [
         contributors: ["Will Barrett, Chris McCord"],
