@@ -15,3 +15,5 @@ erl_crash.dump
 
 # Generated sobelow file
 .sobelow
+
+/doc
