@@ -7,7 +7,7 @@ defmodule Linguist.Mixfile do
   Elixir Internationalization library, extended to support translation files in the rails-i18n format.
   """
 
-  @repo_url "https://github.com/change/linguist"
+  @repo_url "https://github.com/mertonium/linguist"
 
   @version "0.3.0"
 
@@ -40,10 +40,9 @@ defmodule Linguist.Mixfile do
 
   def package do
     [
-      contributors: ["Will Barrett, Chris McCord"],
+      maintainers: ["John Mertens"],
       licenses: ["MIT"],
-      links: %{github: @repo_url},
-      organization: "Change"
+      links: %{github: @repo_url}
     ]
   end
 
