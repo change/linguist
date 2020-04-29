@@ -73,7 +73,7 @@ defmodule Linguist.Vocabulary do
 
           is_binary(source) ->
             @external_resource source
-            Code.eval_file(source) |> elem(0)
+            source |> Code.eval_file() |> elem(0)
 
           true ->
             source
