@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.3.0 (in dev)
+## v0.3.0 (2020-04-28)
 * [Upgrade `ex_cldr` to version 2](https://github.com/mertonium/linguist/commit/b66681c4d66543829f1154af3e5a90a1fa93aca7). From the PR description (by @barrieloydall):
   > This PR updates ex_cldr to the latest 2.x` version which requires a few changes beyond a number version update.
   >
