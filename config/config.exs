@@ -1,6 +1,8 @@
 use Mix.Config
 
-config :linguist, pluralization_key: :count
+config :linguist,
+  pluralization_key: :count,
+  cldr: Linguist.Cldr
 
 config :ex_cldr, json_library: Jason
 

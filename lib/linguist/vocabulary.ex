@@ -33,16 +33,21 @@ defmodule Linguist.Vocabulary do
   @doc """
   Compiles all the translations and inject the functions created in the current module.
   """
-  defmacro __using__(_options) do
+  defmacro __using__(options \\ []) do
+    cldr = Keyword.get(options, :cldr, Application.get_env(:linguist, :cldr))
     quote do
       Module.register_attribute(__MODULE__, :locales, accumulate: true, persist: false)
+
+      Module.register_attribute(__MODULE__, :cldr, accumulate: false, persist: false)
+      Module.put_attribute(__MODULE__, :cldr, unquote(cldr))
+
       import unquote(__MODULE__)
       @before_compile unquote(__MODULE__)
     end
   end
 
   defmacro __before_compile__(env) do
-    Compiler.compile(Module.get_attribute(env.module, :locales))
+    Compiler.compile(Module.get_attribute(env.module, :locales), Module.get_attribute(env.module, :cldr))
   end
 
   @doc """

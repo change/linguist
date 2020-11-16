@@ -1,0 +1,8 @@
+---
+simple: "простое"
+interpolate: "интерполяция %{value}"
+countable:
+  one: "%{count} элемент"
+  few: "%{count} элемента"
+  many: "%{count} элементов"
+  other: "%{count} элементов"
