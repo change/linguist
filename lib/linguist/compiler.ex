@@ -42,7 +42,12 @@ defmodule Linguist.Compiler do
   @simple_interpol "%{"
 
   def compile(translations) do
-    langs = Keyword.keys(translations) |> Enum.map(&to_string/1)
+    langs = translations |> Enum.reduce([], fn item, acc ->
+      case item do
+        {name, _paths} -> acc ++ [to_string(name)]
+        _ -> acc
+      end
+    end)
 
     translations =
       for {locale, source} <- translations do
