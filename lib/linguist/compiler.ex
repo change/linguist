@@ -51,7 +51,25 @@ defmodule Linguist.Compiler do
 
     quote do
       def t(locale, path, binding \\ [])
+
+      def t(locale, path, bindings) do
+        pluralization_key = Application.fetch_env!(:linguist, :pluralization_key)
+
+        if Keyword.has_key?(bindings, pluralization_key) do
+          plural_atom =
+            bindings
+            |> Keyword.get(pluralization_key)
+            |> Cardinal.plural_rule(locale)
+
+          new_path = "#{path}.#{plural_atom}"
+          do_t(locale, new_path, bindings)
+        else
+          do_t(locale, path, bindings)
+        end
+      end
+
       unquote(translations)
+
       def do_t(_locale, _path, _bindings), do: {:error, :no_translation}
 
       def t!(locale, path, bindings \\ []) do
@@ -78,22 +96,6 @@ defmodule Linguist.Compiler do
         deftranslations(locale, path, val)
       else
         quote do
-          def t(locale, path, bindings) do
-            pluralization_key = Application.fetch_env!(:linguist, :pluralization_key)
-
-            if Keyword.has_key?(bindings, pluralization_key) do
-              plural_atom =
-                bindings
-                |> Keyword.get(pluralization_key)
-                |> Cardinal.plural_rule(locale)
-
-              new_path = "#{path}.#{plural_atom}"
-              do_t(locale, new_path, bindings)
-            else
-              do_t(locale, path, bindings)
-            end
-          end
-
           def do_t(unquote(locale), unquote(path), bindings) do
             {:ok, unquote(interpolate(val, :bindings))}
           end
