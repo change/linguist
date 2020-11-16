@@ -26,6 +26,11 @@ defmodule VocabularyTest do
     assert ["fr", "en", "es"] == I18n.locales()
   end
 
+  test "it handles both string and atom locales" do
+    assert I18n.t!("en", "foo") == I18n.t!(:en, "foo")
+    assert I18n.t("en", "foo") == I18n.t(:en, "foo")
+  end
+
   test "it handles translations at rool level" do
     assert I18n.t!("en", "foo") == "bar"
     assert I18n.t("en", "foo") == {:ok, "bar"}
