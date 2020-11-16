@@ -50,7 +50,7 @@ iex> I18n.t!("en", "users.title")
 
 The key to use for pluralization is configurable, and should likely be an atom:
 
-```
+```elixir
 config :linguist, pluralization_key: :count
 ```
 will cause the system to pluralize based on the `count` parameter passed to the `t` function.
