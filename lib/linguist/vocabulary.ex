@@ -79,6 +79,8 @@ defmodule Linguist.Vocabulary do
             source
         end
 
+      name = name |> to_string()
+
       @locales {name, loaded_source}
     end
   end
