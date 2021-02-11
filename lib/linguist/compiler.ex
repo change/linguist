@@ -42,7 +42,12 @@ defmodule Linguist.Compiler do
   @simple_interpol "%{"
 
   def compile(translations) do
-    langs = Keyword.keys(translations)
+    langs = translations |> Enum.reduce([], fn item, acc ->
+      case item do
+        {name, _paths} -> acc ++ [to_string(name)]
+        _ -> acc
+      end
+    end)
 
     translations =
       for {locale, source} <- translations do
@@ -51,6 +56,9 @@ defmodule Linguist.Compiler do
 
     quote do
       def t(locale, path, binding \\ [])
+      def t(locale, path, binding) when is_atom(locale) do
+        t(to_string(locale), path, binding)
+      end
       unquote(translations)
       def do_t(_locale, _path, _bindings), do: {:error, :no_translation}
 

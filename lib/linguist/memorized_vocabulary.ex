@@ -37,6 +37,10 @@ defmodule Linguist.MemorizedVocabulary do
   def t(locale, path, bindings \\ [])
   def t(nil, _, _), do: raise(LocaleError, nil)
 
+  def t(locale, path, binding) when is_atom(locale) do
+    t(to_string(locale), path, binding)
+  end
+
   def t(locale, path, bindings) do
     pluralization_key = Application.fetch_env!(:linguist, :pluralization_key)
     norm_locale = normalize_locale(locale)
