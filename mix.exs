@@ -15,7 +15,6 @@ defmodule Linguist.Mixfile do
     [
       app: :linguist,
       version: @version,
-      compilers: Mix.compilers() ++ [:cldr],
       elixir: "~> 1.6",
       deps: deps(),
 
