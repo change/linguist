@@ -69,6 +69,7 @@ defmodule Linguist.Vocabulary do
       loaded_source =
         cond do
           is_binary(source) && String.ends_with?(source, [".yml", ".yaml"]) ->
+            @external_resource source
             Linguist.Vocabulary._load_yaml_file(source)
 
           is_binary(source) ->
