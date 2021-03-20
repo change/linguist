@@ -7,6 +7,50 @@ defmodule Linguist.MemorizedVocabulary do
     defexception [:message]
   end
 
+  @pluralization_key Application.get_env(:linguist, :pluralization_key, :count)
+
+  if Application.get_env(:linguist, :vocabulary_backend, :ets) == :persistent_term do
+    if not Code.ensure_loaded?(:persistent_term) do
+      raise("You've set up linguist to use :persistent_term backend, but it is available only if OTP >= 21.2")
+    end
+
+    def create_backend() do
+    end
+
+    def add_to_backend(key, value) do
+      :persistent_term.put({__MODULE__, key}, value)
+    end
+
+    def remove_from_backend(key) do
+      :persistent_term.erase({__MODULE__, key})
+    end
+
+    def get_from_backend(key) do
+      :persistent_term.get({__MODULE__, key}, nil)
+    end
+  else
+    def create_backend() do
+      if :ets.info(__MODULE__) == :undefined do
+        :ets.new(__MODULE__, [:named_table, :set, :protected])
+      end
+    end
+
+    def add_to_backend(key, value) do
+      :ets.insert(__MODULE__, {key, value})
+    end
+
+    def remove_from_backend(key) do
+      :ets.delete(__MODULE__, key)
+    end
+
+    def get_from_backend(key) do
+      case :ets.lookup(__MODULE__, key) |> List.first() do
+        {_, value} -> value
+        nil -> nil
+      end
+    end
+  end
+
   @moduledoc """
   Defines lookup functions for given translation locales, binding interopolation
 
@@ -42,13 +86,12 @@ defmodule Linguist.MemorizedVocabulary do
   end
 
   def t(locale, path, bindings) do
-    pluralization_key = Application.fetch_env!(:linguist, :pluralization_key)
     norm_locale = normalize_locale(locale)
 
-    if Keyword.has_key?(bindings, pluralization_key) do
+    if Keyword.has_key?(bindings, @pluralization_key) do
       plural_atom =
         bindings
-        |> Keyword.get(pluralization_key)
+        |> Keyword.get(@pluralization_key)
         |> Cardinal.plural_rule(norm_locale)
 
       do_t(norm_locale, "#{path}.#{plural_atom}", bindings)
@@ -69,11 +112,13 @@ defmodule Linguist.MemorizedVocabulary do
 
   # sobelow_skip ["DOS.StringToAtom"]
   defp do_t(locale, translation_key, bindings) do
-    case :ets.lookup(:translations_registry, "#{locale}.#{translation_key}") do
-      [] ->
+    result = get_from_backend("#{locale}.#{translation_key}")
+
+    case result do
+      nil ->
         {:error, :no_translation}
 
-      [{_, string}] ->
+      string ->
         translation =
           Compiler.interpol_rgx()
           |> Regex.split(string, on: [:head, :tail])
@@ -92,28 +137,22 @@ defmodule Linguist.MemorizedVocabulary do
   end
 
   def locales do
-    tuple =
-      :ets.lookup(:translations_registry, "memorized_vocabulary.locales")
-      |> List.first()
-
-    if tuple do
-      elem(tuple, 1)
-    end
+    get_from_backend("memorized_vocabulary.locales") || []
   end
 
   def add_locale(name) do
-    current_locales = locales() || []
+    current_locales = locales()
+    new_locales = [name | current_locales] |> Enum.uniq()
 
-    :ets.insert(
-      :translations_registry,
-      {"memorized_vocabulary.locales", [name | current_locales]}
-    )
+    add_to_backend("memorized_vocabulary.locales", new_locales)
   end
 
   def update_translations(locale_name, loaded_source) do
+    create_backend()
+
     loaded_source
     |> Enum.map(fn {key, translation_string} ->
-      :ets.insert(:translations_registry, {"#{locale_name}.#{key}", translation_string})
+      add_to_backend("#{locale_name}.#{key}", translation_string)
     end)
   end
 
@@ -139,10 +178,6 @@ defmodule Linguist.MemorizedVocabulary do
   will not work as expected if called directly.
   """
   def _load_yaml_file(source) do
-    if :ets.info(:translations_registry) == :undefined do
-      :ets.new(:translations_registry, [:named_table, :set, :protected])
-    end
-
     {decode_status, [file_data]} = YamlElixir.read_all_from_file(source)
 
     if decode_status != :ok do

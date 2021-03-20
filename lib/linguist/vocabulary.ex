@@ -36,6 +36,7 @@ defmodule Linguist.Vocabulary do
   defmacro __using__(_options) do
     quote do
       Module.register_attribute(__MODULE__, :locales, accumulate: true, persist: false)
+      @pluralization_key Application.get_env(:linguist, :pluralization_key, :count)
       import unquote(__MODULE__)
       @before_compile unquote(__MODULE__)
     end

@@ -9,15 +9,18 @@ on:
 jobs:
   test:
     name: Elixir ${{matrix.elixir}} / OTP ${{matrix.otp}}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
 
     strategy:
       matrix:
-        include:
-          - elixir: '1.11'
-            otp: '23'
-          - elixir: '1.10'
-            otp: '22'
+        elixir:
+        - "1.9"
+        - "1.10"
+        - "1.11"
+        otp:
+        - "21.0"
+        - "22.0.2"
+        - "23.0"
 
     steps:
     - name: Checkout
@@ -37,8 +40,6 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-mix-${{ matrix.otp }}-${{ matrix.elixir }}-${{ hashFiles('**/mix.lock') }}
           ${{ runner.os }}-mix-${{ matrix.otp }}-${{ matrix.elixir }}
-          ${{ runner.os }}-mix-${{ matrix.otp }}
-          ${{ runner.os }}-mix
 
     - name: Restore _build cache
       uses: actions/cache@v2
@@ -48,8 +49,6 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-build-${{ matrix.otp }}-${{ matrix.elixir }}-${{ hashFiles('**/mix.lock') }}
           ${{ runner.os }}-build-${{ matrix.otp }}-${{ matrix.elixir }}
-          ${{ runner.os }}-build-${{ matrix.otp }}
-          ${{ runner.os }}-build
 
     - name: Install Dependencies
       run: |
@@ -61,3 +60,9 @@ jobs:
       run: |
         mix clean
         mix test
+
+    - name: Run unit tests with persistent_term backend
+      run: mix test
+      if: matrix.otp != '21.0'
+      env:
+        SCHEMA_PROVIDER: persistent_term

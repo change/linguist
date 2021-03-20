@@ -48,9 +48,22 @@ iex> I18n.t!("en", "users.title")
 
 ## Configuration
 
+### Pluralization key
+
 The key to use for pluralization is configurable, and should likely be an atom:
 
 ```elixir
 config :linguist, pluralization_key: :count
 ```
+
 will cause the system to pluralize based on the `count` parameter passed to the `t` function.
+
+### `:persistent_term` support
+
+Also you can use [`:persistent_term`](https://erlang.org/doc/man/persistent_term.html) backend instead of `:ets` in `Linguist.MemoizedVocabulary` by setting up:
+
+```elixir
+config :linguist, vocabulary_backend: :persistent_term
+```
+
+**This is only available on OTP >= 21.2**
