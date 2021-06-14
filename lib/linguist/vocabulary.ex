@@ -2,32 +2,33 @@ defmodule Linguist.Vocabulary do
   alias Linguist.Compiler
 
   @moduledoc """
-  Defines lookup functions for given translation locales, binding interopolation
+  Defines lookup functions for given translation locales, binding interopolation.
 
   Locales are defined with the `locale/2` macro, accepting a locale name and
   either keyword list of translations or String path to evaluate for
   translations list.
 
-  For example, given the following translations :
+  For example, given the following translations:
 
-  locale "en", [
-    flash: [
-      notice: [
-        hello: "hello %{first} %{last}",
+      locale "en", [
+        flash: [
+          notice: [
+            hello: "hello %{first} %{last}",
+          ]
+        ],
+        users: [
+          title: "Users",
+        ]
       ]
-    ],
-    users: [
-      title: "Users",
-    ]
-  ]
 
-  locale "fr", Path.join([__DIR__, "fr.exs"])
+      locale "fr", Path.join([__DIR__, "fr.exs"])
 
-  this module will compile this down to these functions :
+  This module will compile this down to these functions:
 
-  def t("en", "flash.notice.hello", bindings \\ []), do: # ...
-  def t("en", "users.title", bindings \\ []), do: # ...
-  def t("fr", "flash.notice.hello", bindings \\ []), do: # ...
+      def t("en", "flash.notice.hello", bindings \\ []), do: # ...
+      def t("en", "users.title", bindings \\ []), do: # ...
+      def t("fr", "flash.notice.hello", bindings \\ []), do: # ...
+
   """
 
   @doc """
@@ -46,23 +47,24 @@ defmodule Linguist.Vocabulary do
   end
 
   @doc """
-  Embeds locales from provided source
+  Embeds locales from provided source.
 
   * name - The String name of the locale, ie "en", "fr"
   * source -
     1. The String file path to eval that returns a keyword list of translactions
     2. The Keyword List of translations
 
-  Examples
+  ## Examples
 
-  locale "en", [
-    flash: [
-      notice: [
-        hello: "hello %{first} %{last}",
+      locale "en", [
+        flash: [
+          notice: [
+            hello: "hello %{first} %{last}",
+          ]
+        ]
       ]
-    ]
-  ]
-  locale "fr", Path.join([__DIR__, "fr.exs"])
+      locale "fr", Path.join([__DIR__, "fr.exs"])
+
   """
   defmacro locale(name, source) do
     quote bind_quoted: [name: name, source: source] do
@@ -86,9 +88,10 @@ defmodule Linguist.Vocabulary do
   end
 
   @doc """
-  Function used internally to load a yaml file. Please use
-  the `locale` macro with a path to a yaml file - this function
-  will not work as expected if called directly.
+  Function used internally to load a YAML file.
+
+  Please use the `locale` macro with a path to a YAML file - this function will
+  not work as expected if called directly.
   """
   def _load_yaml_file(source) do
     {:ok, [result]} = YamlElixir.read_all_from_file(source)
@@ -99,7 +102,8 @@ defmodule Linguist.Vocabulary do
 
   @doc """
   Recursive function used internally for loading yaml files.
-  Not intended for external use
+
+  Not intended for external use.
   """
   # sobelow_skip ["DOS.StringToAtom"]
   def _yaml_reducer({key, value}, acc) when is_binary(value) do

@@ -8,31 +8,32 @@ defmodule Linguist.MemorizedVocabulary do
   end
 
   @moduledoc """
-  Defines lookup functions for given translation locales, binding interopolation
+  Defines lookup functions for given translation locales, binding interopolation.
 
   Locales are defined with the `locale/2` function, accepting a locale name and
   a String path to evaluate for the translations list.
 
-  For example, given the following translations :
+  For example, given the following translations:
 
-  locale "en", [
-    flash: [
-      notice: [
-        hello: "hello %{first} %{last}",
+      locale "en", [
+        flash: [
+          notice: [
+            hello: "hello %{first} %{last}",
+          ]
+        ],
+        users: [
+          title: "Users",
+        ]
       ]
-    ],
-    users: [
-      title: "Users",
-    ]
-  ]
 
-  locale "fr", Path.join([__DIR__, "fr.exs"])
+      locale "fr", Path.join([__DIR__, "fr.exs"])
 
-  this module will respond to these functions :
+  This module will respond to these functions:
 
-  t("en", "flash.notice.hello", bindings \\ []), do: # ...
-  t("en", "users.title", bindings \\ []), do: # ...
-  t("fr", "flash.notice.hello", bindings \\ []), do: # ...
+      t("en", "flash.notice.hello", bindings \\ []), do: # ...
+      t("en", "users.title", bindings \\ []), do: # ...
+      t("fr", "flash.notice.hello", bindings \\ []), do: # ...
+
   """
   def t(locale, path, bindings \\ [])
   def t(nil, _, _), do: raise(LocaleError, nil)
@@ -118,14 +119,15 @@ defmodule Linguist.MemorizedVocabulary do
   end
 
   @doc """
-  Embeds locales from provided source
+  Embeds locales from provided source.
 
   * name - The String name of the locale, ie "en", "fr"
   * source - The String file path to load YAML from that returns a structured list of translations
 
-  Examples
+  ## Examples
 
-  locale "es", Path.join([__DIR__, "es.yml"])
+      locale "es", Path.join([__DIR__, "es.yml"])
+
   """
   def locale(name, source) do
     loaded_source = Linguist.MemorizedVocabulary._load_yaml_file(source)
@@ -134,9 +136,10 @@ defmodule Linguist.MemorizedVocabulary do
   end
 
   @doc """
-  Function used internally to load a yaml file. Please use
-  the `locale` macro with a path to a yaml file - this function
-  will not work as expected if called directly.
+  Function used internally to load a YAML file.
+
+  Please use the `locale` macro with a path to a YAML file - this function will
+  not work as expected if called directly.
   """
   def _load_yaml_file(source) do
     if :ets.info(:translations_registry) == :undefined do
@@ -160,8 +163,9 @@ defmodule Linguist.MemorizedVocabulary do
   end
 
   @doc """
-  Recursive function used internally for loading yaml files.
-  Not intended for external use
+  Recursive function used internally for loading YAML files.
+
+  Not intended for external use.
   """
   def _yaml_reducer({key, value}, acc) when is_binary(value) do
     key_name =
