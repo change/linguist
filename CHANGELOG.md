@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.3.2 (2021-08-11)
+Wow, I held on to this release waaaaaay too long. Sorry about that. Also, a *huge thank you to @dolfinus for their contributes* (and nudges)!
+
+Here's what changed:
+* [removes the cldr compiler](https://github.com/change/linguist/pull/28)
+* [improved readme syntax highlighting](https://github.com/change/linguist/pull/29)
+* [much improved handling of locales as atoms or binaries](https://github.com/change/linguist/pull/30)
+* [remove warning about 'always matches' function](https://github.com/change/linguist/pull/31)
+* [stop unnecessary local file downloads](https://github.com/change/linguist/pull/32)
+* [automatically start the cldr application](https://github.com/change/linguist/pull/33)
+* [add CI pipeline with github actions](https://github.com/change/linguist/pull/35)
+* [setup CI to use ubuntu 18](https://github.com/change/linguist/pull/36)
+
 ## v0.3.1 (2020-05-28)
 * Transfer the code to the "change" namespace (only an update to `mix.exs`).
 
