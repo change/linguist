@@ -1,5 +1,4 @@
 defmodule Linguist.MemorizedVocabulary do
-  alias Linguist.Cldr.Number.Cardinal
   alias Linguist.Compiler
   alias Linguist.{LocaleError, NoTranslationError}
 
@@ -42,6 +41,16 @@ defmodule Linguist.MemorizedVocabulary do
   end
 
   def t(locale, path, bindings) do
+    cldr = case :ets.lookup(:translations_registry, "memorized_vocabulary.cldr") do
+      [] ->
+        Application.get_env(:linguist, :cldr)
+
+      [{_, value}] ->
+        value
+    end
+
+    cardinal = "#{cldr}.Number.Cardinal" |> String.to_atom()
+
     pluralization_key = Application.fetch_env!(:linguist, :pluralization_key)
     norm_locale = normalize_locale(locale)
 
@@ -49,9 +58,14 @@ defmodule Linguist.MemorizedVocabulary do
       plural_atom =
         bindings
         |> Keyword.get(pluralization_key)
-        |> Cardinal.plural_rule(norm_locale)
+        |> cardinal.plural_rule(norm_locale)
 
-      do_t(norm_locale, "#{path}.#{plural_atom}", bindings)
+      case plural_atom do
+        value when is_atom(value) ->
+          do_t(norm_locale, "#{path}.#{plural_atom}", bindings)
+        other ->
+          other
+      end
     else
       do_t(norm_locale, path, bindings)
     end
@@ -64,6 +78,9 @@ defmodule Linguist.MemorizedVocabulary do
 
       {:error, :no_translation} ->
         raise %NoTranslationError{message: "#{locale}: #{path}"}
+
+      {:error, {err, msg}} ->
+        raise struct(err) |> Map.put(:message, msg)
     end
   end
 
@@ -115,6 +132,23 @@ defmodule Linguist.MemorizedVocabulary do
     |> Enum.map(fn {key, translation_string} ->
       :ets.insert(:translations_registry, {"#{locale_name}.#{key}", translation_string})
     end)
+  end
+
+  @doc """
+  Sets Cldr backend for handling locales
+
+  * value - Module initialized with `use Cldr` macros
+
+  Examples
+
+  cldr MyProject.Cldr
+  """
+  def cldr(value) do
+
+    :ets.insert(
+      :translations_registry,
+      {"memorized_vocabulary.cldr", value}
+    )
   end
 
   @doc """

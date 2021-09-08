@@ -1,6 +1,13 @@
 defmodule VocabularyTest do
   use ExUnit.Case
 
+  defmodule Ru.Cldr do
+    use Cldr,
+      providers: [],
+      default_locale: "en",
+      locales: ["ru", "en"]
+  end
+
   defmodule I18n do
     use Linguist.Vocabulary
     locale("es", Path.join([__DIR__, "es.yml"]))
@@ -20,10 +27,59 @@ defmodule VocabularyTest do
         other: "%{count} pommes"
       ]
     )
+
+    locale(
+      "ru",
+      simple: "простое",
+      interpolate: "интерполяция %{value}"
+    )
+  end
+
+  defmodule I18n.FailingPluralization do
+    use Linguist.Vocabulary
+    locale(
+      "ru",
+      countable: [
+        one: "%{count} элемент",
+        few: "%{count} элемента",
+        many: "%{count} элементов",
+        other: "%{count} элементов"
+      ]
+    )
+  end
+
+  defmodule I18n.ValidPluralization1 do
+    use Linguist.Vocabulary, cldr: Ru.Cldr
+
+    locale(
+      "ru",
+      countable: [
+        one: "%{count} элемент",
+        few: "%{count} элемента",
+        many: "%{count} элементов",
+        other: "%{count} элементов"
+      ]
+    )
+  end
+
+  defmodule I18n.ValidPluralization2 do
+    use Linguist.Vocabulary
+
+    @cldr Ru.Cldr
+
+    locale(
+      "ru",
+      countable: [
+        one: "%{count} элемент",
+        few: "%{count} элемента",
+        many: "%{count} элементов",
+        other: "%{count} элементов"
+      ]
+    )
   end
 
   test "it returns locales" do
-    assert ["fr", "en", "es"] == I18n.locales()
+    assert ["ru", "fr", "en", "es"] == I18n.locales()
   end
 
   test "it handles both string and atom locales" do
@@ -65,18 +121,20 @@ defmodule VocabularyTest do
     end
   end
 
-  test "t! raises KeyError when bindings not provided" do
-    assert_raise KeyError, fn ->
-      I18n.t!("en", "flash.notice.hello", first: "chris")
-    end
-  end
-
   test "it compiles all locales" do
     assert I18n.t!("fr", "flash.notice.hello", first: "chris", last: "mccord") ==
              "salut chris mccord"
 
     assert I18n.t("fr", "flash.notice.hello", first: "chris", last: "mccord") ==
              {:ok, "salut chris mccord"}
+  end
+
+  test "it handles unknown locales" do
+    assert I18n.t!("ru", "simple") == "простое"
+    assert I18n.t("ru", "simple") == {:ok, "простое"}
+
+    assert I18n.t!("ru", "interpolate", value: "значения") == "интерполяция значения"
+    assert I18n.t("ru", "interpolate", value: "значения") == {:ok, "интерполяция значения"}
   end
 
   test "t! raises NoTranslationError when translation is missing" do
@@ -107,6 +165,62 @@ defmodule VocabularyTest do
     test "pluralizes Spanish correctly" do
       assert I18n.t!("es", "apple", count: 1) == "1 manzana"
       assert I18n.t!("es", "apple", count: 2) == "2 manzanas"
+    end
+
+    test "t returns an error for unknown locale" do
+      assert I18n.FailingPluralization.t("ru", "countable", count: 1) |> elem(0) == :error
+    end
+
+    test "t! throws an error for unknown locale" do
+      assert_raise Cldr.UnknownLocaleError, fn ->
+        assert I18n.FailingPluralization.t!("ru", "countable", count: 1)
+      end
+    end
+
+    test "pluralizes unknown locale with custom Cldr backend" do
+      assert I18n.ValidPluralization1.t!("ru", "countable", count: 1) == "1 элемент"
+      assert I18n.ValidPluralization1.t!("ru", "countable", count: 2) == "2 элемента"
+      assert I18n.ValidPluralization1.t!("ru", "countable", count: 3) == "3 элемента"
+      assert I18n.ValidPluralization1.t!("ru", "countable", count: 4) == "4 элемента"
+      assert I18n.ValidPluralization1.t!("ru", "countable", count: 5) == "5 элементов"
+      assert I18n.ValidPluralization1.t!("ru", "countable", count: 6) == "6 элементов"
+      assert I18n.ValidPluralization1.t!("ru", "countable", count: 7) == "7 элементов"
+      assert I18n.ValidPluralization1.t!("ru", "countable", count: 8) == "8 элементов"
+      assert I18n.ValidPluralization1.t!("ru", "countable", count: 9) == "9 элементов"
+      assert I18n.ValidPluralization1.t!("ru", "countable", count: 10) == "10 элементов"
+
+      assert I18n.ValidPluralization2.t!("ru", "countable", count: 1) == "1 элемент"
+      assert I18n.ValidPluralization2.t!("ru", "countable", count: 2) == "2 элемента"
+      assert I18n.ValidPluralization2.t!("ru", "countable", count: 3) == "3 элемента"
+      assert I18n.ValidPluralization2.t!("ru", "countable", count: 4) == "4 элемента"
+      assert I18n.ValidPluralization2.t!("ru", "countable", count: 5) == "5 элементов"
+      assert I18n.ValidPluralization2.t!("ru", "countable", count: 6) == "6 элементов"
+      assert I18n.ValidPluralization2.t!("ru", "countable", count: 7) == "7 элементов"
+      assert I18n.ValidPluralization2.t!("ru", "countable", count: 8) == "8 элементов"
+      assert I18n.ValidPluralization2.t!("ru", "countable", count: 9) == "9 элементов"
+      assert I18n.ValidPluralization2.t!("ru", "countable", count: 10) == "10 элементов"
+
+      assert I18n.ValidPluralization1.t("ru", "countable", count: 1) == {:ok, "1 элемент"}
+      assert I18n.ValidPluralization1.t("ru", "countable", count: 2) == {:ok, "2 элемента"}
+      assert I18n.ValidPluralization1.t("ru", "countable", count: 3) == {:ok, "3 элемента"}
+      assert I18n.ValidPluralization1.t("ru", "countable", count: 4) == {:ok, "4 элемента"}
+      assert I18n.ValidPluralization1.t("ru", "countable", count: 5) == {:ok, "5 элементов"}
+      assert I18n.ValidPluralization1.t("ru", "countable", count: 6) == {:ok, "6 элементов"}
+      assert I18n.ValidPluralization1.t("ru", "countable", count: 7) == {:ok, "7 элементов"}
+      assert I18n.ValidPluralization1.t("ru", "countable", count: 8) == {:ok, "8 элементов"}
+      assert I18n.ValidPluralization1.t("ru", "countable", count: 9) == {:ok, "9 элементов"}
+      assert I18n.ValidPluralization1.t("ru", "countable", count: 10) == {:ok, "10 элементов"}
+
+      assert I18n.ValidPluralization2.t("ru", "countable", count: 1) == {:ok, "1 элемент"}
+      assert I18n.ValidPluralization2.t("ru", "countable", count: 2) == {:ok, "2 элемента"}
+      assert I18n.ValidPluralization2.t("ru", "countable", count: 3) == {:ok, "3 элемента"}
+      assert I18n.ValidPluralization2.t("ru", "countable", count: 4) == {:ok, "4 элемента"}
+      assert I18n.ValidPluralization2.t("ru", "countable", count: 5) == {:ok, "5 элементов"}
+      assert I18n.ValidPluralization2.t("ru", "countable", count: 6) == {:ok, "6 элементов"}
+      assert I18n.ValidPluralization2.t("ru", "countable", count: 7) == {:ok, "7 элементов"}
+      assert I18n.ValidPluralization2.t("ru", "countable", count: 8) == {:ok, "8 элементов"}
+      assert I18n.ValidPluralization2.t("ru", "countable", count: 9) == {:ok, "9 элементов"}
+      assert I18n.ValidPluralization2.t("ru", "countable", count: 10) == {:ok, "10 элементов"}
     end
 
     test "throws an error when a pluralized string is not given a count" do

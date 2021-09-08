@@ -1,5 +1,4 @@
 defmodule Linguist.Compiler do
-  alias Linguist.Cldr.Number.Cardinal
   alias Linguist.NoTranslationError
 
   @doc ~S"""
@@ -41,13 +40,16 @@ defmodule Linguist.Compiler do
   @escaped_interpol_rgx ~r/%%{/
   @simple_interpol "%{"
 
-  def compile(translations) do
+  def compile(translations, cldr \\ nil) do
     langs = translations |> Enum.reduce([], fn item, acc ->
       case item do
         {name, _paths} -> acc ++ [to_string(name)]
         _ -> acc
       end
     end)
+    cldr = cldr || Application.fetch_env!(:linguist, :cldr)
+
+    cardinal = "#{cldr}.Number.Cardinal" |> String.to_atom()
 
     translations =
       for {locale, source} <- translations do
@@ -68,15 +70,18 @@ defmodule Linguist.Compiler do
           plural_atom =
             bindings
             |> Keyword.get(pluralization_key)
-            |> Cardinal.plural_rule(locale)
+            |> unquote(cardinal).plural_rule(locale)
 
-          new_path = "#{path}.#{plural_atom}"
-          do_t(locale, new_path, bindings)
+          case plural_atom do
+            value when is_atom(value) ->
+              do_t(locale, "#{path}.#{plural_atom}", bindings)
+            other ->
+              other
+          end
         else
           do_t(locale, path, bindings)
         end
       end
-      
       unquote(translations)
 
       def do_t(_locale, _path, _bindings), do: {:error, :no_translation}
@@ -88,6 +93,9 @@ defmodule Linguist.Compiler do
 
           {:error, :no_translation} ->
             raise %NoTranslationError{message: "#{locale}: #{path}"}
+
+          {:error, {err, msg}} ->
+            raise struct(err) |> Map.put(:message, msg)
         end
       end
 
