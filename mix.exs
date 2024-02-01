@@ -15,7 +15,7 @@ defmodule Linguist.Mixfile do
     [
       app: :linguist,
       version: @version,
-      elixir: "~> 1.15",
+      elixir: "~> 1.11",
       deps: deps(),
 
       # Hex
