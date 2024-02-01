@@ -16,8 +16,6 @@ jobs:
         include:
           - elixir: '1.11'
             otp: '23'
-          - elixir: '1.10'
-            otp: '22'
           - elixir: '1.15'
             otp: '25'
 
