@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.4.0 (2024-01-31)
+* Add ci test and support Elixir 1.15 and OTP 25
+* Upgrade `ex_cldr` to version 2.37
+* Now requires Elixir ~> 1.11
+
 ## v0.3.2 (2021-08-11)
 Wow, I held on to this release waaaaaay too long. Sorry about that. Also, a *huge thank you to @dolfinus for their contributes* (and nudges)!
 

@@ -9,13 +9,13 @@ defmodule Linguist.Mixfile do
 
   @repo_url "https://github.com/change/linguist"
 
-  @version "0.3.2"
+  @version "0.4.0"
 
   def project do
     [
       app: :linguist,
       version: @version,
-      elixir: "~> 1.6",
+      elixir: "~> 1.11",
       deps: deps(),
 
       # Hex
@@ -47,10 +47,9 @@ defmodule Linguist.Mixfile do
 
   defp deps do
     [
-      {:ex_cldr, "~> 2.0"},
+      {:ex_cldr, "~> 2.37"},
       {:jason, "~> 1.0"},
       {:yaml_elixir, "~> 2.0"},
-
       {:ex_doc, "~> 0.22.0", only: [:dev, :test], runtime: false},
       {:credo, "~> 0.9.0", only: [:dev, :test], runtime: false},
       {:sobelow, "~> 0.10", only: :dev, runtime: false}

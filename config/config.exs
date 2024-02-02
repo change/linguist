@@ -1,4 +1,4 @@
-use Mix.Config
+import Config
 
 config :linguist, pluralization_key: :count
 
