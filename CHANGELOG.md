@@ -2,6 +2,7 @@
 
 ## v0.4.1 (2024-02-05)
 * Add mix docs to ci workflow, to ensure docs build after changes
+* Add elixir 1.13 to test matrix
 * Remove unused `earmark` dep
 * Remove unnecessary `applications:` config causing error with `mix docs`
 
