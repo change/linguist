@@ -1,9 +1,11 @@
 # Linguist
 [![Test](https://github.com/change/linguist/actions/workflows/test.yml/badge.svg)](https://github.com/change/linguist/actions/workflows/test.yml)
-[![version on Hex.pm](https://img.shields.io/hexpm/v/linguist)](https://hex.pm/packages/linguist)
+[![Version on Hex.pm](https://img.shields.io/hexpm/v/linguist.svg)](https://hex.pm/packages/linguist)
 [![Hex Docs](https://img.shields.io/badge/hex-docs-lightgreen.svg)](https://hexdocs.pm/linguist)
-[![Hex.pm downloads](https://img.shields.io/hexpm/dt/linguist)](https://hex.pm/packages/linguist)
-[![License on Hex.pm](https://img.shields.io/hexpm/l/linguist)](https://github.com/change/linguist/blob/master/LICENSE)
+[![Hex.pm downloads](https://img.shields.io/hexpm/dt/linguist.svg)](https://hex.pm/packages/linguist)
+[![License](https://img.shields.io/hexpm/l/linguist.svg)](https://github.com/change/linguist/blob/master/LICENSE)
+[![Latest commit](https://img.shields.io/github/last-commit/change/linguist.svg)](https://github.com/change/linguist/commits/master)
+![GitHub top language](https://img.shields.io/github/languages/top/change/linguist)
 
 > Linguist is a simple Elixir Internationalization library
 
