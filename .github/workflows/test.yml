@@ -64,3 +64,6 @@ jobs:
 
     - name: Run unit tests
       run: mix test
+
+    - name: Build docs (validate build)
+      run: mix docs
