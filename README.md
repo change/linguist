@@ -1,13 +1,18 @@
 # Linguist
-> Linguist is a simple Elixir Internationalization library
+[![Test](https://github.com/change/linguist/actions/workflows/test.yml/badge.svg)](https://github.com/change/linguist/actions/workflows/test.yml)
+[![version on Hex.pm](https://img.shields.io/hexpm/v/linguist)](https://hex.pm/packages/linguist)
+[![Hex Docs](https://img.shields.io/badge/hex-docs-lightgreen.svg)](https://hexdocs.pm/linguist)
+[![Hex.pm downloads](https://img.shields.io/hexpm/dt/linguist)](https://hex.pm/packages/linguist)
+[![License on Hex.pm](https://img.shields.io/hexpm/l/linguist)](https://github.com/change/linguist/blob/master/LICENSE)
 
+> Linguist is a simple Elixir Internationalization library
 
 ## Usage
 
 ```elixir
 defmodule I18n do
   use Linguist.Vocabulary
-  
+
   locale "en", [
     flash: [
       notice: [
@@ -22,7 +27,7 @@ defmodule I18n do
       ]
     ]
   ]
-  
+
   locale "fr", Path.join([__DIR__, "fr.exs"])
 
 end
