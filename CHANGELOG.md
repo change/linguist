@@ -10,7 +10,8 @@
 * Remove unnecessary `applications:` config causing error with `mix docs`
 * Update dependencies + credo fixes
 * Update readme, add status badges
-* Docs and typo fixes
+* Updates docs and typo fixes
++ Add dependabot and codeowner configs
 
 ## v0.3.2 (2021-08-11)
 Wow, I held on to this release waaaaaay too long. Sorry about that. Also, a *huge thank you to @dolfinus for their contributes* (and nudges)!
