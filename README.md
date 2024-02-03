@@ -1,4 +1,5 @@
 # Linguist
+
 [![Test](https://github.com/change/linguist/actions/workflows/test.yml/badge.svg)](https://github.com/change/linguist/actions/workflows/test.yml)
 [![Version on Hex.pm](https://img.shields.io/hexpm/v/linguist.svg)](https://hex.pm/packages/linguist)
 [![Hex Docs](https://img.shields.io/badge/hex-docs-lightgreen.svg)](https://hexdocs.pm/linguist)
@@ -8,6 +9,24 @@
 ![GitHub top language](https://img.shields.io/github/languages/top/change/linguist)
 
 > Linguist is a simple Elixir Internationalization library
+
+## Installation
+
+Add `:linguist` to your `mix.exs` dependencies:
+
+```elixir
+def deps do
+  [
+    {:linguist, "~> 0.4"}
+  ]
+end
+```
+
+Update your dependencies:
+
+```bash
+$ mix deps.get
+```
 
 ## Usage
 
@@ -31,7 +50,6 @@ defmodule I18n do
   ]
 
   locale "fr", Path.join([__DIR__, "fr.exs"])
-
 end
 
 # fr.exs
