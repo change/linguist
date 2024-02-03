@@ -8,6 +8,8 @@
 * Add Elixir 1.13 OTP 24 to ci test matrix
 * Remove unused `earmark` dep
 * Remove unnecessary `applications:` config causing error with `mix docs`
+* Update dependencies + credo fixes
+* Update readme, add status badges
 
 ## v0.3.2 (2021-08-11)
 Wow, I held on to this release waaaaaay too long. Sorry about that. Also, a *huge thank you to @dolfinus for their contributes* (and nudges)!
