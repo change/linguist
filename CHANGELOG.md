@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.4.1 (2024-02-05)
+* Add mix docs to ci workflow, to ensure docs build after changes
+* Remove unused `earmark` dep
+* Remove unnecessary `applications:` config causing error with `mix docs`
+
 ## v0.4.0 (2024-01-31)
 * Add ci test and support Elixir 1.15 and OTP 25
 * Upgrade `ex_cldr` to version 2.37
