@@ -46,7 +46,7 @@ defmodule Linguist.Mixfile do
       {:ex_cldr, "~> 2.37"},
       {:jason, "~> 1.0"},
       {:yaml_elixir, "~> 2.0"},
-      {:ex_doc, "~> 0.22.0", only: [:dev, :test], runtime: false},
+      {:ex_doc, "~> 0.22", only: [:dev, :test], runtime: false},
       {:credo, "~> 0.9.0", only: [:dev, :test], runtime: false},
       {:sobelow, "~> 0.10", only: :dev, runtime: false}
     ]
