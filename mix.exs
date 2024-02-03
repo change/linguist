@@ -33,10 +33,6 @@ defmodule Linguist.Mixfile do
     ]
   end
 
-  def application do
-    [applications: [:yaml_elixir, :ex_cldr]]
-  end
-
   def package do
     [
       maintainers: ["John Mertens", "Justin Almeida"],
