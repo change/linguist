@@ -1,4 +1,7 @@
 defmodule Linguist.Compiler do
+  @moduledoc """
+  Translation Compiler Module.
+  """
   alias Linguist.Cldr.Number.Cardinal
   alias Linguist.NoTranslationError
 
@@ -41,6 +44,7 @@ defmodule Linguist.Compiler do
   @escaped_interpol_rgx ~r/%%{/
   @simple_interpol "%{"
 
+  # credo:disable-for-next-line Credo.Check.Refactor.CyclomaticComplexity
   def compile(translations) do
     langs =
       translations
