@@ -1,4 +1,5 @@
 defmodule Linguist do
+  @moduledoc false
   defmodule NoTranslationError do
     defexception [:message]
 
@@ -13,7 +14,7 @@ defmodule Linguist do
     @impl true
     def exception(value) do
       msg =
-        "Invalid locale: expected a locale in the format 'es-ES' or 'es', but recieved: #{value}"
+        "Invalid locale: expected a locale in the format 'es-ES' or 'es', but received: #{value}"
 
       %LocaleError{message: msg}
     end

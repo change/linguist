@@ -17,3 +17,6 @@ erl_crash.dump
 .sobelow
 
 /doc
+
+# Ignore tarball, built by "mix hex.build"
+linguist-*.tar
