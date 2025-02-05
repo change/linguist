@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.4.1 (2025-02-05)
+* Fix issue with locale normalization in `MemorizedVocabulary.t/3`
+* Update dependencies to latest versions
+* Improve documentation and add more examples
+* Enhance CI pipeline to include more Elixir and OTP versions
+* Add support for new locale formats
+* Remove deprecated functions and clean up codebase
+* Change to use `main` as the default branch.
+
 ## v0.4.0 (2024-02-05)
 * Now requires Elixir ~> 1.11
 * Add Elixir 1.15 and OTP 25 to ci test matrix
