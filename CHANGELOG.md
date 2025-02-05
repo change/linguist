@@ -8,6 +8,7 @@
 * Add support for new locale formats
 * Remove deprecated functions and clean up codebase
 * Change to use `main` as the default branch.
+* [Diff](https://github.com/change/linguist/compare/v0.4.0...v0.4.1)
 
 ## v0.4.0 (2024-02-05)
 * Now requires Elixir ~> 1.11
