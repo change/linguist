@@ -1,7 +1,6 @@
 # Changelog
 
 ## v0.4.1 (2025-02-05)
-* Fix issue with locale normalization in `MemorizedVocabulary.t/3`
 * Update dependencies to latest versions
 * Improve documentation and add more examples
 * Enhance CI pipeline to include more Elixir and OTP versions
