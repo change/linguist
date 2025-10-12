@@ -24,6 +24,7 @@ jobs:
             otp: '27'
           - elixir: '1.18'
             otp: '27'
+            lint: true
 
     steps:
     - name: Checkout
@@ -62,14 +63,23 @@ jobs:
     - name: Install package dependencies
       run: mix deps.get
 
+    - name: Validate format
+      run: mix format --check-formatted
+      if: ${{ matrix.lint }}
+
     - name: Remove compiled application files
       run: mix clean
 
     - name: Compile dependencies
       run: mix compile
 
+    - name: Compile with warnings as errors
+      run: mix compile --warnings-as-errors
+      if: ${{ matrix.lint }}
+
     - name: Run unit tests
       run: mix test
 
     - name: Build docs (validate build)
-      run: mix docs
+      run: MIX_ENV=docs mix docs
+      if: ${{ matrix.lint }}
