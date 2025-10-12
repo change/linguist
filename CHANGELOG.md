@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.5.0 (2025-10-12)
+* **Now requires Elixir ~> 1.14** (previously ~> 1.11)
+* Update CI test matrix to include Elixir 1.14-1.18
+* Upgrade `ex_doc` from ~> 0.22 to ~> 0.36
+* Update `ex_cldr` from 2.37.5 to 2.43.2
+* Update `yaml_elixir` from 2.9.0 to 2.11.0
+* Update `jason` from 1.4.1 to 1.4.4
+* Update `credo` from 1.7.3 to 1.7.12
+* Remove poison
+* Update GitHub workflows
+* Update repository references from `master` to `main` branch
+
 ## v0.4.0 (2024-02-05)
 * Now requires Elixir ~> 1.11
 * Add Elixir 1.15 and OTP 25 to ci test matrix
