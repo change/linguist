@@ -31,7 +31,7 @@ defmodule Linguist.MixProject do
 
   defp package do
     [
-      maintainers: ["Change.org", "John Mertens", "Justin Almeida"],
+      maintainers: ["Change.org"],
       licenses: ["MIT"],
       links: %{github: source_url()}
     ]
