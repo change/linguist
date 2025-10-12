@@ -17,7 +17,7 @@ Add `:linguist` to your `mix.exs` dependencies:
 ```elixir
 def deps do
   [
-    {:linguist, "~> 0.4"}
+    {:linguist, "~> 0.5"}
   ]
 end
 ```
