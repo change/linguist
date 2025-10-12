@@ -10,7 +10,7 @@ defmodule Linguist.MixProject do
     [
       app: :linguist,
       version: @version,
-      elixir: "~> 1.11",
+      elixir: "~> 1.14",
       deps: deps(),
       package: package(),
       description: description(),
