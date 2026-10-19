@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.6.0 (2026-10-19)
+* **Now requires Elixir ~> 1.15** (previously ~> 1.14)
+* Update CI test matrix to Elixir 1.15-1.20 (adds 1.19/OTP 28 and 1.20/OTP 29, drops 1.14)
+* Update `ex_cldr` from 2.43.2 to 2.44.1
+* Update `jason` from 1.4.4 to 1.4.5
+* Update `ex_doc` from 0.38.4 to 0.40.4
+* Update `credo` from 1.7.12 to 1.7.19
+* Update `sobelow` from 0.14.0 to 0.16.0
+
 ## v0.5.0 (2025-10-12)
 * **Now requires Elixir ~> 1.14** (previously ~> 1.11)
 * Update CI test matrix to include Elixir 1.14-1.18
