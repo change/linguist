@@ -1,8 +1,5 @@
 # Changelog
 
-## v0.6.0 (2026-08-27)
-* Update CI test matrix to include Elixir 1.19 and 1.20
-
 ## v0.5.0 (2025-10-12)
 * **Now requires Elixir ~> 1.14** (previously ~> 1.11)
 * Update CI test matrix to include Elixir 1.14-1.18

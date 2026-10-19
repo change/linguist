@@ -4,13 +4,13 @@ defmodule Linguist.MixProject do
   @moduledoc false
   use Mix.Project
 
-  @version "0.6.0"
+  @version "0.5.0"
 
   def project do
     [
       app: :linguist,
       version: @version,
-      elixir: "~> 1.14",
+      elixir: "~> 1.15",
       deps: deps(),
       package: package(),
       description: description(),
