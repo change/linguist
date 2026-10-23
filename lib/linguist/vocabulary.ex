@@ -32,7 +32,7 @@ defmodule Linguist.Vocabulary do
   """
 
   @doc """
-  Compiles all the translations and inject the functions created in the current module.
+  Compiles all the translations and injects the functions created in the current module.
   """
   defmacro __using__(_options) do
     quote do

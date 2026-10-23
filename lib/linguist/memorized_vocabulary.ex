@@ -206,7 +206,7 @@ defmodule Linguist.MemorizedVocabulary do
 
   # @privatedoc
   # Takes a locale as an argument, checks if the string contains a `-`, if so
-  # splits the string on the `-` downcases the first part and upcases the second part.
+  # splits the string on the `-`, downcases the first part and upcases the second part.
   # With a locale that contains no `-` the string is downcased, and if the locale contains more
   # than one `-`, a LocaleError is raised.
   def normalize_locale(locale) do
