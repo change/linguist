@@ -1,7 +1,10 @@
 defmodule MemorizedVocabularyTest do
   use ExUnit.Case, async: false
 
-  setup do
+  # The translations registry is a protected ETS table owned by the process
+  # that loads the first locale. Load the locales once, from the setup_all
+  # process, so the table lives for the whole module and the tests only read it.
+  setup_all do
     Linguist.MemorizedVocabulary.locale("es", Path.join([__DIR__, "es.yml"]))
     Linguist.MemorizedVocabulary.locale("fr-FR", Path.join([__DIR__, "fr-FR.yml"]))
     :ok
