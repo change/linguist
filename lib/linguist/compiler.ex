@@ -5,6 +5,23 @@ defmodule Linguist.Compiler do
   alias Linguist.Cldr.Number.Cardinal
   alias Linguist.NoTranslationError
 
+  @interpol_rgx ~r/
+                   (?<head>)
+                   (?<!%) %{.+?}
+                   (?<tail>)
+                   /x
+
+  @doc """
+  Returns the regex used to split a translation string around its
+  `%{name}` interpolations. Escaped interpolations, `%%{name}`, are not matched.
+  """
+  def interpol_rgx do
+    @interpol_rgx
+  end
+
+  @escaped_interpol_rgx ~r/%%{/
+  @simple_interpol "%{"
+
   @doc ~S"""
   Compiles keyword list of translations into function definitions AST.
 
@@ -31,19 +48,6 @@ defmodule Linguist.Compiler do
         end
       end
   """
-
-  @interpol_rgx ~r/
-                   (?<head>)
-                   (?<!%) %{.+?}
-                   (?<tail>)
-                   /x
-  def interpol_rgx do
-    @interpol_rgx
-  end
-
-  @escaped_interpol_rgx ~r/%%{/
-  @simple_interpol "%{"
-
   # credo:disable-for-next-line Credo.Check.Refactor.CyclomaticComplexity
   def compile(translations) do
     langs =
