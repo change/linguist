@@ -123,7 +123,11 @@ defmodule Linguist.MemorizedVocabulary do
 
   @doc """
   Returns the names of the locales that have been loaded with `locale/2`,
-  most recently loaded first, or `nil` if no locales have been loaded.
+  most recently loaded first.
+
+  The translations registry is created when the first locale is loaded, so
+  this raises `ArgumentError` if `locale/2` has not been called yet. Returns
+  `nil` if the registry exists but no locale has been added to it.
   """
   def locales do
     tuple =
