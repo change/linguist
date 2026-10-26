@@ -2,37 +2,50 @@ defmodule Linguist.Vocabulary do
   alias Linguist.Compiler
 
   @moduledoc """
-  Defines lookup functions for given translation locales, binding interpolation.
+  Defines lookup functions for translation locales, with binding interpolation.
 
-  Locales are defined with the `locale/2` macro, accepting a locale name and
-  either keyword list of translations or String path to evaluate for
-  translations list.
+  `use Linguist.Vocabulary` in a module, then add locales with the `locale/2`
+  macro. Each locale is given a name, and either a keyword list of
+  translations, or the path to an `.exs` file that evaluates to a keyword
+  list, or to a `.yml` or `.yaml` file.
 
-  For example, given the following translations:
+  For example:
 
-      locale "en", [
-        flash: [
-          notice: [
-            hello: "hello %{first} %{last}",
+      defmodule I18n do
+        use Linguist.Vocabulary
+
+        locale "en", [
+          flash: [
+            notice: [
+              hello: "hello %{first} %{last}"
+            ]
+          ],
+          users: [
+            title: "Users"
           ]
-        ],
-        users: [
-          title: "Users",
         ]
-      ]
 
-      locale "fr", Path.join([__DIR__, "fr.exs"])
+        locale "fr", Path.join([__DIR__, "fr.exs"])
+      end
 
-  This module will compile this down to these functions:
+  The translations are compiled into `t/3`, `t!/3` and `locales/0` functions
+  on the module:
 
-      def t("en", "flash.notice.hello", bindings \\ []), do: # ...
-      def t("en", "users.title", bindings \\ []), do: # ...
-      def t("fr", "flash.notice.hello", bindings \\ []), do: # ...
+      I18n.t("en", "flash.notice.hello", first: "Alex", last: "Smith")
+      #=> {:ok, "hello Alex Smith"}
 
+      I18n.t!("en", "users.title")
+      #=> "Users"
+
+      I18n.locales()
+      #=> ["fr", "en"]
   """
 
   @doc """
-  Compiles all the translations and injects the functions created in the current module.
+  Sets up the current module to add locales with `locale/2`.
+
+  The locales are compiled into functions when the module is compiled, by
+  `__before_compile__/1`.
   """
   defmacro __using__(_options) do
     quote do
@@ -53,24 +66,27 @@ defmodule Linguist.Vocabulary do
   end
 
   @doc """
-  Embeds locales from provided source.
+  Adds a locale to the current module.
 
-  * name - The String name of the locale, ie "en", "fr"
-  * source -
-    1. The String file path to eval that returns a keyword list of translations
-    2. The Keyword List of translations
+  * name - The String name of the locale, e.g. "en", "fr"
+  * source - One of:
+    1. A keyword list of translations
+    2. The String path to an `.exs` file that evaluates to a keyword list of translations
+    3. The String path to a `.yml` or `.yaml` file of translations
 
   ## Examples
 
       locale "en", [
         flash: [
           notice: [
-            hello: "hello %{first} %{last}",
+            hello: "hello %{first} %{last}"
           ]
         ]
       ]
 
       locale "fr", Path.join([__DIR__, "fr.exs"])
+
+      locale "es", Path.join([__DIR__, "es.yml"])
   """
   defmacro locale(name, source) do
     quote bind_quoted: [name: name, source: source] do
@@ -96,10 +112,10 @@ defmodule Linguist.Vocabulary do
   end
 
   @doc """
-  Function used internally to load a yaml file.
+  Loads a YAML file into a keyword list of translations.
 
-  Please use the `locale` macro with a path to a yaml file - this function
-  will not work as expected if called directly.
+  Used internally by the `locale/2` macro, which should be used to add a YAML
+  file of translations.
   """
   @spec _load_yaml_file(Path.t()) :: keyword()
   def _load_yaml_file(source) do
@@ -110,9 +126,9 @@ defmodule Linguist.Vocabulary do
   end
 
   @doc """
-  Recursive function used internally for loading yaml files.
+  Recursive function used internally for loading YAML files.
 
-  Not intended for external use
+  Not intended for external use.
   """
   @spec _yaml_reducer({String.t(), term()}, keyword()) :: keyword()
   # sobelow_skip ["DOS.StringToAtom"]

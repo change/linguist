@@ -1,6 +1,6 @@
 defmodule Linguist.Compiler do
   @moduledoc """
-  Translation Compiler Module.
+  Compiles translations into the functions defined by `Linguist.Vocabulary`.
   """
   alias Linguist.Cldr.Number.Cardinal
   alias Linguist.NoTranslationError
@@ -24,30 +24,29 @@ defmodule Linguist.Compiler do
   @simple_interpol "%{"
 
   @doc ~S"""
-  Compiles keyword list of translations into function definitions AST.
+  Compiles a keyword list of translations, keyed by locale, into the AST of
+  the functions defined by `Linguist.Vocabulary`.
 
   ## Examples
 
-      iex> Linguist.Compiler.compile(en: [
-        hello: "Hello %{name}",
-        alert: "Alert!"
-      ])
+      Linguist.Compiler.compile(en: [hello: "Hello %{name}", alert: "Alert!"])
 
-      quote do
-        def t(locale, path, binding \\ [])
+  returns the AST of functions equivalent to:
 
-        def t("en", "hello", bindings), do: "Hello " <> Keyword.fetch!(bindings, :name)
-        def t("en", "alert", bindings), do: "Alert!"
+      # Converts an atom locale to a String, adds the plural category to the
+      # path when the bindings include the pluralization key, then calls do_t/3
+      def t(locale, path, bindings \\ [])
 
-        def t(_locale, _path, _bindings), do: {:error, :no_translation}
-        def t!(locale, path, bindings \\ []) do
-          case t(locale, path, bindings) do
-            {:ok, translation} -> translation
-            {:error, :no_translation} ->
-              raise %NoTranslationError{message: "#{locale}: #{path}"}
-          end
-        end
-      end
+      def do_t("en", "hello", bindings),
+        do: {:ok, "Hello " <> to_string(Keyword.fetch!(bindings, :name))}
+
+      def do_t("en", "alert", _bindings), do: {:ok, "Alert!"}
+      def do_t(_locale, _path, _bindings), do: {:error, :no_translation}
+
+      # Returns the translation from t/3, or raises Linguist.NoTranslationError
+      def t!(locale, path, bindings \\ [])
+
+      def locales, do: ["en"]
   """
   @spec compile([{atom() | String.t(), keyword()}]) :: Macro.t()
   # credo:disable-for-next-line Credo.Check.Refactor.CyclomaticComplexity
