@@ -42,6 +42,12 @@ defmodule Linguist.Vocabulary do
     end
   end
 
+  @doc """
+  Compiles the locales registered with `locale/2` into the `t/3`, `t!/3` and
+  `locales/0` functions of the current module.
+
+  Invoked by the compiler through `@before_compile`, set by `use Linguist.Vocabulary`.
+  """
   defmacro __before_compile__(env) do
     Compiler.compile(Module.get_attribute(env.module, :locales))
   end

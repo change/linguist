@@ -34,6 +34,29 @@ defmodule Linguist.MemorizedVocabulary do
       t("fr", "flash.notice.hello", bindings \\ []), do: # ...
 
   """
+
+  @doc """
+  Looks up the translation for `path` in `locale`, interpolating `bindings`.
+
+  * locale - The String or atom name of the locale, ie "en", "fr-FR". It is
+    normalized to the format "ll" or "ll-LL" before lookup
+  * path - The String dot-separated path of the translation, ie "flash.notice.hello"
+  * bindings - The Keyword list of values to interpolate into the translation.
+    If it includes the configured `:pluralization_key`, the plural form for that
+    value is looked up
+
+  Returns `{:ok, translation}`, or `{:error, :no_translation}` when no
+  translation is found. Raises `Linguist.LocaleError` for a `nil` or malformed
+  locale, and `KeyError` when a binding used by the translation is missing.
+
+  ## Examples
+
+      t("es", "flash.notice.hello", first: "Michael", last: "Westin")
+      #=> {:ok, "hola Michael Westin"}
+
+      t("es", "apple", count: 2)
+      #=> {:ok, "2 manzanas"}
+  """
   def t(locale, path, bindings \\ [])
   def t(nil, _, _), do: raise(LocaleError, nil)
 
@@ -57,6 +80,12 @@ defmodule Linguist.MemorizedVocabulary do
     end
   end
 
+  @doc """
+  Looks up the translation for `path` in `locale`, interpolating `bindings`.
+
+  Works as `t/3`, but returns the translation itself, and raises
+  `Linguist.NoTranslationError` when no translation is found.
+  """
   def t!(locale, path, bindings \\ []) do
     case t(locale, path, bindings) do
       {:ok, translation} ->
@@ -92,6 +121,10 @@ defmodule Linguist.MemorizedVocabulary do
     end
   end
 
+  @doc """
+  Returns the names of the locales that have been loaded with `locale/2`,
+  most recently loaded first, or `nil` if no locales have been loaded.
+  """
   def locales do
     tuple =
       :ets.lookup(:translations_registry, "memorized_vocabulary.locales")
@@ -102,6 +135,11 @@ defmodule Linguist.MemorizedVocabulary do
     end
   end
 
+  @doc """
+  Adds `name` to the list of loaded locales returned by `locales/0`.
+
+  Called by `locale/2`, which should be used to load a locale.
+  """
   def add_locale(name) do
     current_locales = locales() || []
 
@@ -111,6 +149,15 @@ defmodule Linguist.MemorizedVocabulary do
     )
   end
 
+  @doc """
+  Stores the translations in `loaded_source` for `locale_name`.
+
+  * locale_name - The String name of the locale, ie "en", "fr"
+  * loaded_source - A map of dot-separated translation paths to translation
+    strings, as returned by `_load_yaml_file/1`
+
+  Called by `locale/2`, which should be used to load a locale.
+  """
   def update_translations(locale_name, loaded_source) do
     loaded_source
     |> Enum.map(fn {key, translation_string} ->
@@ -138,7 +185,7 @@ defmodule Linguist.MemorizedVocabulary do
   @doc """
   Function used internally to load a yaml file.
 
-  Please use the `locale` macro with a path to a yaml file - this function
+  Please use the `locale/2` function with a path to a yaml file - this function
   will not work as expected if called directly.
   """
   def _load_yaml_file(source) do
@@ -205,11 +252,22 @@ defmodule Linguist.MemorizedVocabulary do
     }
   end
 
-  # @privatedoc
-  # Takes a locale as an argument, checks if the string contains a `-`, if so
-  # splits the string on the `-`, downcases the first part and upcases the second part.
-  # With a locale that contains no `-` the string is downcased, and if the locale contains more
-  # than one `-`, a LocaleError is raised.
+  @doc """
+  Normalizes a locale name to the format "ll" or "ll-LL".
+
+  If the locale contains a `-`, it is split on the `-`, the first part is
+  downcased and the second part is upcased. A locale without a `-` is
+  downcased. Raises `Linguist.LocaleError` if the locale contains more than
+  one `-`.
+
+  ## Examples
+
+      normalize_locale("FR-fr")
+      #=> "fr-FR"
+
+      normalize_locale("ES")
+      #=> "es"
+  """
   def normalize_locale(locale) do
     if String.match?(locale, ~r/-/) do
       case String.split(locale, "-") do
