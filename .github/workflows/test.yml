@@ -83,6 +83,23 @@ jobs:
       run: mix credo --strict
       if: ${{ matrix.lint }}
 
+    - name: Restore PLT cache
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      if: ${{ matrix.lint }}
+      with:
+        path: priv/plts
+        key: ${{ runner.os }}-plt-${{ matrix.otp }}-${{ matrix.elixir }}-${{ hashFiles('**/mix.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-plt-${{ matrix.otp }}-${{ matrix.elixir }}
+
+    - name: Build PLT
+      run: mix dialyzer --plt
+      if: ${{ matrix.lint }}
+
+    - name: Run dialyzer
+      run: mix dialyzer
+      if: ${{ matrix.lint }}
+
     - name: Run unit tests
       run: mix test
 

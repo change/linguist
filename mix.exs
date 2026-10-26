@@ -12,6 +12,10 @@ defmodule Linguist.MixProject do
       version: @version,
       elixir: "~> 1.15",
       deps: deps(),
+      dialyzer: [
+        plt_file: {:no_warn, "priv/plts/dialyzer.plt"},
+        ignore_warnings: ".dialyzer_ignore.exs"
+      ],
       package: package(),
       description: description(),
       name: "Linguist",
@@ -48,6 +52,7 @@ defmodule Linguist.MixProject do
   defp deps do
     [
       {:credo, "~> 1.0", only: [:dev, :test], runtime: false},
+      {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
       {:ex_cldr, "~> 2.37"},
       {:ex_doc, "~> 0.36", only: :docs, runtime: false},
       {:jason, "~> 1.0"},
