@@ -8,7 +8,7 @@
 [![Latest commit](https://img.shields.io/github/last-commit/change/linguist.svg)](https://github.com/change/linguist/commits/main)
 ![GitHub top language](https://img.shields.io/github/languages/top/change/linguist)
 
-> Linguist is a simple Elixir internationalization library
+Linguist is a simple Elixir internationalization library.
 
 ## Installation
 
