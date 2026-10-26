@@ -20,7 +20,3 @@ erl_crash.dump
 
 # Ignore tarball, built by "mix hex.build"
 linguist-*.tar
-
-# Dialyzer PLTs
-/priv/plts/*.plt
-/priv/plts/*.plt.hash

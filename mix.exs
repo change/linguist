@@ -13,7 +13,7 @@ defmodule Linguist.MixProject do
       elixir: "~> 1.15",
       deps: deps(),
       dialyzer: [
-        plt_file: {:no_warn, "priv/plts/dialyzer.plt"},
+        plt_file: {:no_warn, "_build/plts/dialyzer.plt"},
         ignore_warnings: ".dialyzer_ignore.exs"
       ],
       package: package(),
