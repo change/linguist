@@ -125,6 +125,7 @@ defmodule Linguist.Compiler do
     |> Regex.split(string, on: [:head, :tail])
     |> Enum.reduce("", fn
       <<"%{" <> rest>>, acc ->
+        # credo:disable-for-next-line Credo.Check.Warning.UnsafeToAtom
         key = String.to_atom(String.trim_trailing(rest, "}"))
         bindings = Macro.var(var, __MODULE__)
 

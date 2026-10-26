@@ -1,5 +1,5 @@
 defmodule EscapingTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
 
   defmodule Esc do
     use Linguist.Vocabulary

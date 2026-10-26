@@ -1,5 +1,5 @@
 defmodule MemorizedVocabularyTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: false
 
   setup do
     Linguist.MemorizedVocabulary.locale("es", Path.join([__DIR__, "es.yml"]))
