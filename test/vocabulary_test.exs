@@ -1,5 +1,5 @@
 defmodule VocabularyTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
 
   defmodule I18n do
     use Linguist.Vocabulary

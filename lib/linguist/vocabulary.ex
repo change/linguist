@@ -75,7 +75,9 @@ defmodule Linguist.Vocabulary do
 
           is_binary(source) ->
             @external_resource source
-            source |> Code.eval_file() |> elem(0)
+            source
+            |> Code.eval_file()
+            |> elem(0)
 
           true ->
             source
@@ -107,11 +109,13 @@ defmodule Linguist.Vocabulary do
   """
   # sobelow_skip ["DOS.StringToAtom"]
   def _yaml_reducer({key, value}, acc) when is_binary(value) do
+    # credo:disable-for-next-line Credo.Check.Warning.UnsafeToAtom
     [{String.to_atom(key), value} | acc]
   end
 
   # sobelow_skip ["DOS.StringToAtom"]
   def _yaml_reducer({key, value}, acc) do
+    # credo:disable-for-next-line Credo.Check.Warning.UnsafeToAtom
     [{String.to_atom(key), Enum.reduce(value, [], &Linguist.Vocabulary._yaml_reducer/2)} | acc]
   end
 end

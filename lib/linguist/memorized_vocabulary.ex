@@ -79,6 +79,7 @@ defmodule Linguist.MemorizedVocabulary do
           |> Regex.split(string, on: [:head, :tail])
           |> Enum.reduce("", fn
             <<"%{" <> rest>>, acc ->
+              # credo:disable-for-next-line Credo.Check.Warning.UnsafeToAtom
               key = String.to_atom(String.trim_trailing(rest, "}"))
 
               acc <> to_string(Keyword.fetch!(bindings, key))
