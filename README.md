@@ -89,8 +89,8 @@ iex> I18n.t!("en", "flash.notice.hello", first: "chris", last: "mccord")
 iex> I18n.t!("fr", "flash.notice.hello", first: "chris", last: "mccord")
 "salut chris mccord"
 
-iex> I18n.t("es", "flash.notice.hello", first: "chris", last: "mccord")
-{:ok, "hola chris mccord"}
+iex> I18n.t("es", "flash.notice.hello", first: "Alex", last: "Smith")
+{:ok, "hola Alex Smith"}
 
 iex> I18n.t("en", "users.missing")
 {:error, :no_translation}
@@ -113,8 +113,8 @@ compile time, and stores the translations in an ETS table:
 iex> Linguist.MemorizedVocabulary.locale("es", "priv/locales/es.yml")
 true
 
-iex> Linguist.MemorizedVocabulary.t("es", "flash.notice.hello", first: "chris", last: "mccord")
-{:ok, "hola chris mccord"}
+iex> Linguist.MemorizedVocabulary.t("es", "flash.notice.hello", first: "Alex", last: "Smith")
+{:ok, "hola Alex Smith"}
 ```
 
 The ETS table is owned by the process that loads the first locale, so load
