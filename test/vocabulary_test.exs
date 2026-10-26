@@ -1,6 +1,8 @@
 defmodule VocabularyTest do
   use ExUnit.Case, async: true
 
+  doctest Linguist.Vocabulary
+
   defmodule I18n do
     use Linguist.Vocabulary
     locale("es", Path.join([__DIR__, "es.yml"]))

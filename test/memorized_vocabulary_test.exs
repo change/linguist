@@ -10,6 +10,9 @@ defmodule MemorizedVocabularyTest do
     :ok
   end
 
+  # The doctests look up translations from the es.yml locale loaded in setup_all.
+  doctest Linguist.MemorizedVocabulary
+
   test "locales() returns locales" do
     assert ["fr-FR", "es"] == Linguist.MemorizedVocabulary.locales()
   end

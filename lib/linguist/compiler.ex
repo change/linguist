@@ -14,6 +14,11 @@ defmodule Linguist.Compiler do
   @doc """
   Returns the regex used to split a translation string around its
   `%{name}` interpolations. Escaped interpolations, `%%{name}`, are not matched.
+
+  ## Examples
+
+      iex> Regex.split(Linguist.Compiler.interpol_rgx(), "Hello %{name}, %%{escaped}!", on: [:head, :tail])
+      ["Hello ", "%{name}", ", %%{escaped}!"]
   """
   @spec interpol_rgx() :: Regex.t()
   def interpol_rgx do

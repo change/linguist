@@ -30,15 +30,16 @@ defmodule Linguist.MemorizedVocabulary do
         one: "%{count} manzana"
         other: "%{count} manzanas"
 
-  Load it, then look up its translations:
+  Load it:
 
       Linguist.MemorizedVocabulary.locale("es", Path.join([__DIR__, "es.yml"]))
 
-      Linguist.MemorizedVocabulary.t("es", "flash.notice.hello", first: "Alex", last: "Smith")
-      #=> {:ok, "hola Alex Smith"}
+  Then look up its translations:
 
-      Linguist.MemorizedVocabulary.t!("es", "users.title")
-      #=> "Usuarios"
+      iex> Linguist.MemorizedVocabulary.t("es", "flash.notice.hello", first: "Alex", last: "Smith")
+      {:ok, "hola Alex Smith"}
+      iex> Linguist.MemorizedVocabulary.t!("es", "users.title")
+      "Usuarios"
   """
 
   @doc """
@@ -57,11 +58,12 @@ defmodule Linguist.MemorizedVocabulary do
 
   ## Examples
 
-      t("es", "flash.notice.hello", first: "Alex", last: "Smith")
-      #=> {:ok, "hola Alex Smith"}
-
-      t("es", "apple", count: 2)
-      #=> {:ok, "2 manzanas"}
+      iex> Linguist.MemorizedVocabulary.t("es", "flash.notice.hello", first: "Alex", last: "Smith")
+      {:ok, "hola Alex Smith"}
+      iex> Linguist.MemorizedVocabulary.t("es", "apple", count: 2)
+      {:ok, "2 manzanas"}
+      iex> Linguist.MemorizedVocabulary.t("ES", "flash.missing")
+      {:error, :no_translation}
   """
   @spec t(String.t() | atom(), String.t(), keyword()) ::
           {:ok, String.t()} | {:error, :no_translation}
@@ -93,6 +95,11 @@ defmodule Linguist.MemorizedVocabulary do
 
   Works as `t/3`, but returns the translation itself, and raises
   `Linguist.NoTranslationError` when no translation is found.
+
+  ## Examples
+
+      iex> Linguist.MemorizedVocabulary.t!("es", "apple", count: 1)
+      "1 manzana"
   """
   @spec t!(String.t() | atom(), String.t(), keyword()) :: String.t()
   def t!(locale, path, bindings \\ []) do
@@ -288,11 +295,10 @@ defmodule Linguist.MemorizedVocabulary do
 
   ## Examples
 
-      normalize_locale("FR-fr")
-      #=> "fr-FR"
-
-      normalize_locale("ES")
-      #=> "es"
+      iex> Linguist.MemorizedVocabulary.normalize_locale("FR-fr")
+      "fr-FR"
+      iex> Linguist.MemorizedVocabulary.normalize_locale("ES")
+      "es"
   """
   @spec normalize_locale(String.t()) :: String.t()
   def normalize_locale(locale) do

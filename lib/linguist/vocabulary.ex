@@ -9,36 +9,26 @@ defmodule Linguist.Vocabulary do
   translations, or the path to an `.exs` file that evaluates to a keyword
   list, or to a `.yml` or `.yaml` file.
 
-  For example:
-
-      defmodule I18n do
-        use Linguist.Vocabulary
-
-        locale "en", [
-          flash: [
-            notice: [
-              hello: "hello %{first} %{last}"
-            ]
-          ],
-          users: [
-            title: "Users"
-          ]
-        ]
-
-        locale "fr", Path.join([__DIR__, "fr.exs"])
-      end
-
   The translations are compiled into `t/3`, `t!/3` and `locales/0` functions
-  on the module:
+  on the module.
 
-      I18n.t("en", "flash.notice.hello", first: "Alex", last: "Smith")
-      #=> {:ok, "hello Alex Smith"}
+  ## Examples
 
-      I18n.t!("en", "users.title")
-      #=> "Users"
-
-      I18n.locales()
-      #=> ["fr", "en"]
+      iex> defmodule MyApp.I18n do
+      ...>   use Linguist.Vocabulary
+      ...>   locale "en", flash: [notice: [hello: "hello %{first} %{last}"]], users: [title: "Users"]
+      ...>   locale "fr", flash: [notice: [hello: "salut %{first} %{last}"]]
+      ...> end
+      iex> MyApp.I18n.t("en", "flash.notice.hello", first: "Alex", last: "Smith")
+      {:ok, "hello Alex Smith"}
+      iex> MyApp.I18n.t!("fr", "flash.notice.hello", first: "Alex", last: "Smith")
+      "salut Alex Smith"
+      iex> MyApp.I18n.t!("en", "users.title")
+      "Users"
+      iex> MyApp.I18n.t("en", "users.missing")
+      {:error, :no_translation}
+      iex> MyApp.I18n.locales()
+      ["fr", "en"]
   """
 
   @doc """
