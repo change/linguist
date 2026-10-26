@@ -6,7 +6,7 @@ defmodule Linguist.Compiler do
   alias Linguist.NoTranslationError
 
   @doc ~S"""
-  Compiles keyword list of transactions into function definitions AST.
+  Compiles keyword list of translations into function definitions AST.
 
   ## Examples
 
