@@ -101,6 +101,7 @@ defmodule Linguist.Vocabulary do
   Please use the `locale` macro with a path to a yaml file - this function
   will not work as expected if called directly.
   """
+  @spec _load_yaml_file(Path.t()) :: keyword()
   def _load_yaml_file(source) do
     {:ok, [result]} = YamlElixir.read_all_from_file(source)
 
@@ -113,6 +114,7 @@ defmodule Linguist.Vocabulary do
 
   Not intended for external use
   """
+  @spec _yaml_reducer({String.t(), term()}, keyword()) :: keyword()
   # sobelow_skip ["DOS.StringToAtom"]
   def _yaml_reducer({key, value}, acc) when is_binary(value) do
     # credo:disable-for-next-line Credo.Check.Warning.UnsafeToAtom

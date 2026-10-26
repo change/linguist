@@ -57,6 +57,8 @@ defmodule Linguist.MemorizedVocabulary do
       t("es", "apple", count: 2)
       #=> {:ok, "2 manzanas"}
   """
+  @spec t(String.t() | atom(), String.t(), keyword()) ::
+          {:ok, String.t()} | {:error, :no_translation}
   def t(locale, path, bindings \\ [])
   def t(nil, _, _), do: raise(LocaleError, nil)
 
@@ -86,6 +88,7 @@ defmodule Linguist.MemorizedVocabulary do
   Works as `t/3`, but returns the translation itself, and raises
   `Linguist.NoTranslationError` when no translation is found.
   """
+  @spec t!(String.t() | atom(), String.t(), keyword()) :: String.t()
   def t!(locale, path, bindings \\ []) do
     case t(locale, path, bindings) do
       {:ok, translation} ->
@@ -96,6 +99,8 @@ defmodule Linguist.MemorizedVocabulary do
     end
   end
 
+  @spec do_t(String.t(), String.t(), keyword()) ::
+          {:ok, String.t()} | {:error, :no_translation}
   # sobelow_skip ["DOS.StringToAtom"]
   defp do_t(locale, translation_key, bindings) do
     case :ets.lookup(:translations_registry, "#{locale}.#{translation_key}") do
@@ -129,6 +134,7 @@ defmodule Linguist.MemorizedVocabulary do
   this raises `ArgumentError` if `locale/2` has not been called yet. Returns
   `nil` if the registry exists but no locale has been added to it.
   """
+  @spec locales() :: [String.t()] | nil
   def locales do
     tuple =
       :ets.lookup(:translations_registry, "memorized_vocabulary.locales")
@@ -144,6 +150,7 @@ defmodule Linguist.MemorizedVocabulary do
 
   Called by `locale/2`, which should be used to load a locale.
   """
+  @spec add_locale(String.t()) :: true
   def add_locale(name) do
     current_locales = locales() || []
 
@@ -162,6 +169,7 @@ defmodule Linguist.MemorizedVocabulary do
 
   Called by `locale/2`, which should be used to load a locale.
   """
+  @spec update_translations(String.t(), %{String.t() => String.t()}) :: [true]
   def update_translations(locale_name, loaded_source) do
     loaded_source
     |> Enum.map(fn {key, translation_string} ->
@@ -180,6 +188,7 @@ defmodule Linguist.MemorizedVocabulary do
       locale "es", Path.join([__DIR__, "es.yml"])
 
   """
+  @spec locale(String.t(), Path.t()) :: true
   def locale(name, source) do
     loaded_source = Linguist.MemorizedVocabulary._load_yaml_file(source)
     update_translations(name, loaded_source)
@@ -192,6 +201,7 @@ defmodule Linguist.MemorizedVocabulary do
   Please use the `locale/2` function with a path to a yaml file - this function
   will not work as expected if called directly.
   """
+  @spec _load_yaml_file(Path.t()) :: %{String.t() => String.t()}
   def _load_yaml_file(source) do
     if :ets.info(:translations_registry) == :undefined do
       :ets.new(:translations_registry, [:named_table, :set, :protected])
@@ -218,6 +228,8 @@ defmodule Linguist.MemorizedVocabulary do
 
   Not intended for external use
   """
+  @spec _yaml_reducer({String.t(), term()}, acc) :: acc
+        when acc: %{paths: %{String.t() => String.t()}, current_prefix: String.t()}
   def _yaml_reducer({key, value}, acc) when is_binary(value) do
     key_name =
       if acc.current_prefix == "" do
@@ -272,6 +284,7 @@ defmodule Linguist.MemorizedVocabulary do
       normalize_locale("ES")
       #=> "es"
   """
+  @spec normalize_locale(String.t()) :: String.t()
   def normalize_locale(locale) do
     if String.match?(locale, ~r/-/) do
       case String.split(locale, "-") do
