@@ -15,6 +15,7 @@ defmodule Linguist.Compiler do
   Returns the regex used to split a translation string around its
   `%{name}` interpolations. Escaped interpolations, `%%{name}`, are not matched.
   """
+  @spec interpol_rgx() :: Regex.t()
   def interpol_rgx do
     @interpol_rgx
   end
@@ -48,6 +49,7 @@ defmodule Linguist.Compiler do
         end
       end
   """
+  @spec compile([{atom() | String.t(), keyword()}]) :: Macro.t()
   # credo:disable-for-next-line Credo.Check.Refactor.CyclomaticComplexity
   def compile(translations) do
     langs =
@@ -107,6 +109,7 @@ defmodule Linguist.Compiler do
     end
   end
 
+  @spec deftranslations(String.t(), String.t(), keyword()) :: [Macro.t()]
   defp deftranslations(locale, current_path, translations) do
     for {key, val} <- translations do
       path = append_path(current_path, key)
@@ -123,6 +126,7 @@ defmodule Linguist.Compiler do
     end
   end
 
+  @spec interpolate(String.t(), atom()) :: Macro.t()
   # sobelow_skip ["DOS.StringToAtom"]
   defp interpolate(string, var) do
     @interpol_rgx
@@ -142,9 +146,11 @@ defmodule Linguist.Compiler do
     end)
   end
 
+  @spec append_path(String.t(), atom() | String.t()) :: String.t()
   defp append_path("", next), do: to_string(next)
   defp append_path(current, next), do: "#{current}.#{next}"
 
+  @spec unescape(String.t()) :: String.t()
   defp unescape(segment) do
     Regex.replace(@escaped_interpol_rgx, segment, @simple_interpol)
   end
