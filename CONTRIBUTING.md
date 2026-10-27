@@ -25,11 +25,9 @@ When adding a new Elixir or OTP version:
 
 * Add it to the matrix, and move `lint: true` to the new latest entry.
 * Update `.tool-versions` to the latest versions.
-* Note the change in `CHANGELOG.md`.
 
 Dropping an Elixir version also means raising the `elixir:` requirement in
-`mix.exs`, removing it from the matrix and this table, and calling out the new
-minimum version in `CHANGELOG.md`, so it goes in a minor release.
+`mix.exs`, and removing it from the matrix and this table.
 
 ## Setup
 
@@ -65,5 +63,3 @@ $ MIX_ENV=docs mix docs
 * Fix credo and dialyzer warnings rather than ignoring them. When a check has
   to be skipped, skip it for a single line with a comment explaining why.
 * Keep pull requests small and focused on one change.
-* Add an entry under a new, unreleased version at the top of `CHANGELOG.md`
-  for changes that affect users of the library.
