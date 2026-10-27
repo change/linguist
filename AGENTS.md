@@ -26,7 +26,5 @@ the coding guidelines. These notes add context that is easy to miss.
   `.github/workflows/test.yml`. Update all three together.
 * Credo and dialyzer only run on the CI matrix entry with `lint: true`, so
   run them locally rather than relying on every CI build to catch issues.
-* Don't change the public API. Improve docs, specs and checks instead, and
-  raise any API change as a separate suggestion.
 * Commit messages and pull request descriptions are public, so describe the
   change in general terms and don't reference internal tickets or systems.
