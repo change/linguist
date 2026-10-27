@@ -7,6 +7,7 @@
 * Update `ex_cldr` from 2.44.1 to 2.47.5, which allows `decimal` 3
 * Update `decimal` from 2.4.1 to 3.2.0
 * Run `credo --strict` and dialyzer in CI
+* Add contributing and agent guides
 
 ## v0.6.0 (2026-10-19)
 * **Now requires Elixir ~> 1.15** (previously ~> 1.14)
