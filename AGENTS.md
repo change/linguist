@@ -21,6 +21,9 @@ the coding guidelines. These notes add context that is easy to miss.
 * The `MemorizedVocabulary` ETS table is protected, and owned by the process
   that loads the first locale. Only that process can load more locales, so
   its tests load them in `setup_all`.
+* The supported Elixir and OTP versions are listed in `CONTRIBUTING.md`, and
+  must match the `elixir:` requirement in `mix.exs` and the CI matrix in
+  `.github/workflows/test.yml`. Update all three together.
 * Credo and dialyzer only run on the CI matrix entry with `lint: true`, so
   run them locally rather than relying on every CI build to catch issues.
 * Don't change the public API. Improve docs, specs and checks instead, and
