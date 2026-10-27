@@ -61,8 +61,7 @@ $ MIX_ENV=docs mix docs
 * Write doc examples as doctests where they can run, and add the module to
   its test file with `doctest`.
 * Linguist is a public library, so don't remove a public function or change
-  its behaviour outside a planned release. If a public function is only meant
-  for internal use, document that in its `@doc` rather than making it private.
+  its behaviour outside a planned release.
 * Fix credo and dialyzer warnings rather than ignoring them. When a check has
   to be skipped, skip it for a single line with a comment explaining why.
 * Keep pull requests small and focused on one change.
