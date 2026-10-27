@@ -12,6 +12,7 @@ defmodule Linguist.MixProject do
       version: @version,
       elixir: "~> 1.15",
       deps: deps(),
+      test_ignore_filters: ["test/en.exs"],
       dialyzer: [
         plt_file: {:no_warn, "_build/plts/dialyzer.plt"},
         ignore_warnings: ".dialyzer_ignore.exs"
