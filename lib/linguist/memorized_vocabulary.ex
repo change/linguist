@@ -7,40 +7,47 @@ defmodule Linguist.MemorizedVocabulary do
   end
 
   @moduledoc """
-  Defines lookup functions for given translation locales, binding interpolation.
+  Looks up translations loaded at runtime from YAML files, with binding
+  interpolation.
 
-  Locales are defined with the `locale/2` function, accepting a locale name and
-  a String path to evaluate for the translations list.
+  Locales are loaded with the `locale/2` function, given a locale name and the
+  path to a YAML file of translations. The translations are stored in a named
+  ETS table, so they can be looked up from any process.
 
-  For example, given the following translations:
+  The ETS table is created by, and owned by, the process that loads the first
+  locale. Only that process can load more locales, and the table is deleted
+  when it exits, so load all the locales from a long-lived process, such as
+  during application start.
 
-      locale "en", [
-        flash: [
-          notice: [
-            hello: "hello %{first} %{last}",
-          ]
-        ],
-        users: [
-          title: "Users",
-        ]
-      ]
+  For example, given `es.yml`:
 
-      locale "fr", Path.join([__DIR__, "fr.exs"])
+      flash:
+        notice:
+          hello: "hola %{first} %{last}"
+      users:
+        title: "Usuarios"
+      apple:
+        one: "%{count} manzana"
+        other: "%{count} manzanas"
 
-  This module will respond to these functions:
+  Load it:
 
-      t("en", "flash.notice.hello", bindings \\ []), do: # ...
-      t("en", "users.title", bindings \\ []), do: # ...
-      t("fr", "flash.notice.hello", bindings \\ []), do: # ...
+      Linguist.MemorizedVocabulary.locale("es", Path.join([__DIR__, "es.yml"]))
 
+  Then look up its translations:
+
+      iex> Linguist.MemorizedVocabulary.t("es", "flash.notice.hello", first: "Alex", last: "Smith")
+      {:ok, "hola Alex Smith"}
+      iex> Linguist.MemorizedVocabulary.t!("es", "users.title")
+      "Usuarios"
   """
 
   @doc """
   Looks up the translation for `path` in `locale`, interpolating `bindings`.
 
-  * locale - The String or atom name of the locale, ie "en", "fr-FR". It is
+  * locale - The String or atom name of the locale, e.g. "en", "fr-FR". It is
     normalized to the format "ll" or "ll-LL" before lookup
-  * path - The String dot-separated path of the translation, ie "flash.notice.hello"
+  * path - The String dot-separated path of the translation, e.g. "flash.notice.hello"
   * bindings - The Keyword list of values to interpolate into the translation.
     If it includes the configured `:pluralization_key`, the plural form for that
     value is looked up
@@ -51,11 +58,12 @@ defmodule Linguist.MemorizedVocabulary do
 
   ## Examples
 
-      t("es", "flash.notice.hello", first: "Michael", last: "Westin")
-      #=> {:ok, "hola Michael Westin"}
-
-      t("es", "apple", count: 2)
-      #=> {:ok, "2 manzanas"}
+      iex> Linguist.MemorizedVocabulary.t("es", "flash.notice.hello", first: "Alex", last: "Smith")
+      {:ok, "hola Alex Smith"}
+      iex> Linguist.MemorizedVocabulary.t("es", "apple", count: 2)
+      {:ok, "2 manzanas"}
+      iex> Linguist.MemorizedVocabulary.t("ES", "flash.missing")
+      {:error, :no_translation}
   """
   @spec t(String.t() | atom(), String.t(), keyword()) ::
           {:ok, String.t()} | {:error, :no_translation}
@@ -87,6 +95,11 @@ defmodule Linguist.MemorizedVocabulary do
 
   Works as `t/3`, but returns the translation itself, and raises
   `Linguist.NoTranslationError` when no translation is found.
+
+  ## Examples
+
+      iex> Linguist.MemorizedVocabulary.t!("es", "apple", count: 1)
+      "1 manzana"
   """
   @spec t!(String.t() | atom(), String.t(), keyword()) :: String.t()
   def t!(locale, path, bindings \\ []) do
@@ -163,7 +176,7 @@ defmodule Linguist.MemorizedVocabulary do
   @doc """
   Stores the translations in `loaded_source` for `locale_name`.
 
-  * locale_name - The String name of the locale, ie "en", "fr"
+  * locale_name - The String name of the locale, e.g. "en", "fr"
   * loaded_source - A map of dot-separated translation paths to translation
     strings, as returned by `_load_yaml_file/1`
 
@@ -178,15 +191,19 @@ defmodule Linguist.MemorizedVocabulary do
   end
 
   @doc """
-  Embeds locales from provided source.
+  Loads the translations in a YAML file for a locale.
 
-  * name - The String name of the locale, ie "en", "fr"
-  * source - The String file path to load YAML from that returns a structured list of translations
+  * name - The String name of the locale, e.g. "en", "fr-FR". Use the format
+    "ll" or "ll-LL", as locales are normalized to this format when
+    translations are looked up
+  * source - The String path to a YAML file of translations
+
+  Raises `ArgumentError` if called from a process other than the one that
+  loaded the first locale.
 
   ## Examples
 
-      locale "es", Path.join([__DIR__, "es.yml"])
-
+      locale("es", Path.join([__DIR__, "es.yml"]))
   """
   @spec locale(String.t(), Path.t()) :: true
   def locale(name, source) do
@@ -196,10 +213,10 @@ defmodule Linguist.MemorizedVocabulary do
   end
 
   @doc """
-  Function used internally to load a yaml file.
+  Loads a YAML file into a map of dot-separated translation paths to translations.
 
-  Please use the `locale/2` function with a path to a yaml file - this function
-  will not work as expected if called directly.
+  Used internally by the `locale/2` function, which should be used to load a
+  YAML file of translations.
   """
   @spec _load_yaml_file(Path.t()) :: %{String.t() => String.t()}
   def _load_yaml_file(source) do
@@ -224,9 +241,9 @@ defmodule Linguist.MemorizedVocabulary do
   end
 
   @doc """
-  Recursive function used internally for loading yaml files.
+  Recursive function used internally for loading YAML files.
 
-  Not intended for external use
+  Not intended for external use.
   """
   @spec _yaml_reducer({String.t(), term()}, acc) :: acc
         when acc: %{paths: %{String.t() => String.t()}, current_prefix: String.t()}
@@ -278,11 +295,10 @@ defmodule Linguist.MemorizedVocabulary do
 
   ## Examples
 
-      normalize_locale("FR-fr")
-      #=> "fr-FR"
-
-      normalize_locale("ES")
-      #=> "es"
+      iex> Linguist.MemorizedVocabulary.normalize_locale("FR-fr")
+      "fr-FR"
+      iex> Linguist.MemorizedVocabulary.normalize_locale("ES")
+      "es"
   """
   @spec normalize_locale(String.t()) :: String.t()
   def normalize_locale(locale) do

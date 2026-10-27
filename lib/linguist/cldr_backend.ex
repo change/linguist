@@ -1,6 +1,10 @@
 defmodule Linguist.Cldr do
   @moduledoc """
-  Backend Module for Cldr App configuration, required for ~> 2.0.
+  The ex_cldr backend that provides the plural rules for each locale.
+
+  Add each locale used for pluralization, other than "en", to its config:
+
+      config :linguist, Linguist.Cldr, locales: ["en", "es", "fr"]
   """
   use Cldr,
     otp_app: :linguist,
