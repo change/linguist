@@ -62,4 +62,3 @@ $ MIX_ENV=docs mix docs
   its behaviour outside a planned release.
 * Fix credo and dialyzer warnings rather than ignoring them. When a check has
   to be skipped, skip it for a single line with a comment explaining why.
-* Keep pull requests small and focused on one change.
