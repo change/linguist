@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.6.1 (2026-10-26)
+* Add `@spec`s to all functions, and docs to all public functions
+* Correct and expand the module and function docs, and run the doc examples as doctests
+* Expand and correct the README
+* Update `ex_cldr` from 2.44.1 to 2.47.5, which allows `decimal` 3
+* Update `decimal` from 2.4.1 to 3.2.0
+* Run `credo --strict` and dialyzer in CI
+* Add contributing and agent guides
+
 ## v0.6.0 (2026-10-19)
 * **Now requires Elixir ~> 1.15** (previously ~> 1.14)
 * Update CI test matrix to Elixir 1.15-1.20 (adds 1.19/OTP 28 and 1.20/OTP 29, drops 1.14)
