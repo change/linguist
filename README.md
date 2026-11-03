@@ -169,7 +169,7 @@ config :linguist, Linguist.Cldr, locales: ["en", "es", "fr"]
 ex_cldr reads CLDR's JSON data when it compiles the `Linguist.Cldr` backend,
 so it needs a JSON library at compile time. Linguist doesn't depend on one.
 On OTP 27 or later, ex_cldr uses OTP's built-in `:json` module without any
-configuration. On OTP 25 or 26, add `jason` to your dependencies:
+configuration. On older OTP versions, add `jason` to your dependencies:
 
 ```elixir
 {:jason, "~> 1.0"}
