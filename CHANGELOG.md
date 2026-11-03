@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.7.0 (2026-11-02)
+* **Now requires Elixir ~> 1.16** (previously ~> 1.15)
+* Update CI test matrix to Elixir 1.16-1.20 (drops 1.15 / OTP 25, which no longer get releases)
+* Make `jason` an optional dependency. ex_cldr chooses the JSON library it compiles the CLDR data with: on OTP 27 or later it uses OTP's built-in `:json` with no extra dependency, and on older OTP versions apps add `jason` themselves. `config :ex_cldr, json_library: ...` still sets it explicitly. See "JSON library" in the README
+* **Now requires ex_cldr ~> 2.40** (previously ~> 2.37), the first version that picks OTP's `:json` automatically
+* Update `sobelow` from 0.16.0 to 0.18.1
+
 ## v0.6.1 (2026-10-26)
 * Add `@spec`s to all functions, and docs to all public functions
 * Correct and expand the module and function docs, and run the doc examples as doctests
