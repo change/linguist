@@ -54,7 +54,7 @@ defmodule Linguist.MixProject do
     [
       {:credo, "~> 1.0", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
-      {:ex_cldr, "~> 2.37"},
+      {:ex_cldr, "~> 2.40"},
       {:ex_doc, "~> 0.36", only: :docs, runtime: false},
       {:jason, "~> 1.0", optional: true},
       {:sobelow, "~> 0.10", only: :dev, runtime: false},
