@@ -10,7 +10,7 @@ defmodule Linguist.MixProject do
     [
       app: :linguist,
       version: @version,
-      elixir: "~> 1.15",
+      elixir: "~> 1.16",
       deps: deps(),
       test_ignore_filters: ["test/en.exs"],
       dialyzer: [

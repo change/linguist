@@ -5,12 +5,11 @@ on [GitHub](https://github.com/change/linguist).
 
 ## Supported versions
 
-Linguist requires Elixir `~> 1.15`, set by `elixir:` in `mix.exs`. CI tests
+Linguist requires Elixir `~> 1.16`, set by `elixir:` in `mix.exs`. CI tests
 each supported Elixir version with one OTP version:
 
 | Elixir | OTP |
 | ------ | --- |
-| 1.15   | 25  |
 | 1.16   | 26  |
 | 1.17   | 27  |
 | 1.18   | 27  |
