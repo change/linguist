@@ -98,8 +98,13 @@ jobs:
       run: mix dialyzer
       if: ${{ matrix.lint }}
 
+    # mix test --warnings-as-errors only covers the test files, so compile the test environment first
+    - name: Compile the test environment with warnings as errors
+      run: MIX_ENV=test mix compile --warnings-as-errors
+      if: ${{ matrix.lint }}
+
     - name: Run unit tests
-      run: mix test
+      run: mix test ${{ matrix.lint && '--warnings-as-errors' || '' }}
 
     - name: Build docs (validate build)
       run: MIX_ENV=docs mix docs
